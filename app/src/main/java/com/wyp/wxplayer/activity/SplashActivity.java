@@ -25,7 +25,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-
         // 播放缩放动画
         Animation animation = AnimationUtils.loadAnimation(this,R.anim.splash_anim);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -63,8 +62,8 @@ public class SplashActivity extends AppCompatActivity {
         // 关闭当前界面
         finish();
 
-        // 动态设置界面转场效果
-        //overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        // 切换activity时，动态设置界面转场效果
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
     }
 
 }
