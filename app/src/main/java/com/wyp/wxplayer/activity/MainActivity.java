@@ -6,7 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 import com.wyp.wxplayer.R;
 
 import butterknife.Bind;
@@ -25,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
         // 将 ToolBar 设置为标题栏
         setSupportActionBar(mToolbar);
+
+        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);//ctrl+alt+v :快捷键生成变量名
+        bottomBar.setItemsFromMenu(R.menu.bottombar, new OnMainMenuTabClickListener());//OnMainMenuTabClickListener Refactor提取为内部类
     }
 
     @Override
@@ -50,5 +56,17 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class OnMainMenuTabClickListener implements OnMenuTabClickListener {
+        @Override
+        public void onMenuTabSelected(int menuItemId) {
+            //Toast.makeText(MainActivity.this,"onMenuTabSelected",Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onMenuTabReSelected(int menuItemId) {
+            //Toast.makeText(MainActivity.this,"onMenuTabReSelected",Toast.LENGTH_SHORT).show();
+        }
     }
 }
