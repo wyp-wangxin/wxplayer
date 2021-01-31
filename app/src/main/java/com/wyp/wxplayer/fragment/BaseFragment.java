@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by wyp on 2021/1/31.
  */
@@ -21,7 +23,7 @@ public abstract class BaseFragment extends Fragment {
         if(mRootview==null){
             mRootview = inflater.inflate(getLayoutID(),null);
         }
-
+        ButterKnife.bind(this, mRootview);
         initVeiw();
         return mRootview;
     }
@@ -29,4 +31,10 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void initVeiw();
 
     protected abstract int getLayoutID();
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }
