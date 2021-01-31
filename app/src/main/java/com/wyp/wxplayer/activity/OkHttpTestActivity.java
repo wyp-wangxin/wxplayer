@@ -5,9 +5,13 @@ import android.os.Bundle;
 
 import com.wyp.wxplayer.R;
 import com.wyp.wxplayer.URLProviderUtil;
+import com.wyp.wxplayer.bean.AreaBean;
+import com.wyp.wxplayer.http.BaseCallBack;
+import com.wyp.wxplayer.http.HttpManager;
 import com.wyp.wxplayer.utils.myLog;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,12 +31,26 @@ public class OkHttpTestActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-//        String url = "http://192.168.78.21:8080/1";
-        String url = URLProviderUtil.getMainPageUrl(0,10);
+        String url = "http://192.168.78.21:8080/1";
+        //String url = URLProviderUtil.getMainPageUrl(0,10);
 
 //      getMethod(url);
 //        getInChildThread(url);//OKhttp 自带现场，可以不用自己new thread。
-        postInChildThread(url);
+//        postInChildThread(url);
+
+        HttpManager.getInstance().get(url, new BaseCallBack<List<AreaBean>>() {
+            @Override
+            public void onFailure(int code, Exception e) {
+                myLog.e(TAG,"OkHttpTestActivity.onFailure,e="+e);
+            }
+
+            @Override
+            public void onSuccess(List<AreaBean> areaBeen) {
+                myLog.e(TAG,"OkHttpTestActivity.onSuccess,areaBeen="+areaBeen.size());
+
+            }
+
+        });
     }
 
     // 在子线程发起 post 请求
