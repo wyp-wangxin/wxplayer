@@ -2,15 +2,19 @@ package com.wyp.wxplayer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.wyp.wxplayer.R;
+import com.wyp.wxplayer.fragment.HomeFragment;
+import com.wyp.wxplayer.fragment.TestFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+    private SparseArray<Fragment> mSparseArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
         // 将 ToolBar 设置为标题栏
         setSupportActionBar(mToolbar);
 
+        // 初始化 Fragment 集合
+        mSparseArray = new SparseArray<>();//ctrl+alt+F : 换成成员变量
+
+        mSparseArray.append(R.id.bottombar_home, new HomeFragment());//Ctrl + D :在下面复制当前行
+        mSparseArray.append(R.id.bottombar_mv, TestFragment.newInstance("MV"));
+        mSparseArray.append(R.id.bottombar_vbang, TestFragment.newInstance("V榜"));
+        mSparseArray.append(R.id.bottombar_yuedan, TestFragment.newInstance("悦单"));
+
+        // 处理底部栏
         BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);//ctrl+alt+v :快捷键生成变量名
         bottomBar.setItemsFromMenu(R.menu.bottombar, new OnMainMenuTabClickListener());//OnMainMenuTabClickListener Refactor提取为内部类
     }
@@ -60,13 +74,35 @@ public class MainActivity extends AppCompatActivity {
 
     private class OnMainMenuTabClickListener implements OnMenuTabClickListener {
         @Override
+        /*
+        * 选中了某一个 Tab
+        * */
         public void onMenuTabSelected(int menuItemId) {
-            //Toast.makeText(MainActivity.this,"onMenuTabSelected",Toast.LENGTH_SHORT).show();
+
+            Fragment fragment = mSparseArray.get(menuItemId);
+            switchFragment(fragment);
+            
         }
 
         @Override
+        /*
+            重复选中了某一个 Tab
+        * */
         public void onMenuTabReSelected(int menuItemId) {
             //Toast.makeText(MainActivity.this,"onMenuTabReSelected",Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    /**
+     *将参数里的 Fragment 显示出来
+     * @param fragment
+     */
+    private void switchFragment(Fragment fragment) {
+        FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.container,fragment);
+
+        transaction.commit();
     }
 }
