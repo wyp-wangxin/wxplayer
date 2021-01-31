@@ -23,6 +23,7 @@ public class HomePresenter implements HomeMvp.Presenter {
 
     @Override
     public void loadData(int offset, int size) {
+        //"http://cache.video.iqiyi.com/jp/avlist/202861101/1/?callback=jsonp9";
         String url = URLProviderUtil.getMainPageUrl(offset,size);
         myLog.e(TAG,"HomePresenter.loadData,开始加载数据,url="+url);
 
