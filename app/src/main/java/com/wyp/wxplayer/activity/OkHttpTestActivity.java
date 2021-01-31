@@ -4,14 +4,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.wyp.wxplayer.R;
+import com.wyp.wxplayer.URLProviderUtil;
 import com.wyp.wxplayer.utils.myLog;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class OkHttpTestActivity extends AppCompatActivity {
@@ -24,10 +27,49 @@ public class OkHttpTestActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        String url = "http://192.168.78.21:8080/1";
+//        String url = "http://192.168.78.21:8080/1";
+        String url = URLProviderUtil.getMainPageUrl(0,10);
 
 //      getMethod(url);
-        getInChildThread(url);//OKhttp 自带现场，可以不用自己new thread。
+//        getInChildThread(url);//OKhttp 自带现场，可以不用自己new thread。
+        postInChildThread(url);
+    }
+
+    // 在子线程发起 post 请求
+    private void postInChildThread(String url) {
+
+        // 创建客户端
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        // 创建表单
+        FormBody.Builder bodyBuilder = new FormBody.Builder();
+        bodyBuilder.add("offset","0");
+        bodyBuilder.add("size","10");
+
+        // 创建请求体对象
+        RequestBody body = bodyBuilder.build();
+
+        // 创建请求参数
+        Request request = new Request.Builder().url(url).post(body).build();
+
+        // 创建请求对象
+        Call call = okHttpClient.newCall(request);
+        // 发起请求
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()){
+                    String result = response.body().string();
+                    myLog.e(TAG,"OkHttpTestActivity.postInChildThread,result="+result);
+                }
+            }
+        });
+
     }
 
     // 在子线程发起网络请求
