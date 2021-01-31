@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.wyp.wxplayer.R;
-import com.wyp.wxplayer.fragment.HomeFragment;
+import com.wyp.wxplayer.fragment.homepage.HomeFragment;
 import com.wyp.wxplayer.fragment.TestFragment;
 
 import butterknife.Bind;
