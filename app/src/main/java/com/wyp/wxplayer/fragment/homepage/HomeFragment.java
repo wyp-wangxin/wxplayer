@@ -1,6 +1,7 @@
 package com.wyp.wxplayer.fragment.homepage;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,9 +30,13 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
     private static String TAG = "HomeFragment";
     @Bind(R.id.recylerview)
     RecyclerView mRecylerview;
+    @Bind(R.id.refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
     private HomeMvp.Presenter mPresenter;
     private List<VideoBean> mVideoBeans;
     private HomeAdapter mHomeAdapter;
+    private boolean isRefresh;
 
     public HomeFragment() {
         myLog.e(TAG, "HomeFragment");
@@ -42,7 +47,7 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
         // 创建 presenter
         mPresenter = new HomePresenter(this);
         mPresenter.loadData(0, 10);
-        myLog.e(TAG, "initVeiw  = " );
+
         // 填充 RecylerView 列表。 RecylerView,的基础用法
         // 布局管理器
         LinearLayoutManager layout = new LinearLayoutManager(getContext());//RecylerView 列表
@@ -50,13 +55,13 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
 //        StaggeredGridLayoutManager layout = new StaggeredGridLayoutManager(2,LinearLayoutManager.VERTICAL);// RecylerView 瀑布流
         layout.setOrientation(LinearLayoutManager.VERTICAL);
         mRecylerview.setLayoutManager(layout);
-        myLog.e(TAG, "initVeiw  = 2222" );
+
         // 设置 Adapter
         mVideoBeans = new ArrayList<>();
         mHomeAdapter = new HomeAdapter(mVideoBeans);
         mRecylerview.setAdapter(mHomeAdapter);
-        myLog.e(TAG, "initVeiw  = 3333" );
-        mHomeAdapter.notifyDataSetChanged();
+
+        mSwipeRefreshLayout.setOnRefreshListener(new MyOnRefreshListener());
     }
 
     @Override
@@ -68,6 +73,13 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
     @Override
     public void setData(List<VideoBean> videoBeen) {
         myLog.e(TAG, "videoBeen = " + videoBeen.size());
+
+        if (isRefresh){// 下拉刷新需要清空原有数据
+            this.mVideoBeans.clear();
+            isRefresh = false;
+            mSwipeRefreshLayout.setRefreshing(false);//设置false表示刷新结束
+        }
+
         this.mVideoBeans.addAll(videoBeen);
         mHomeAdapter.notifyDataSetChanged();
     }
@@ -78,5 +90,12 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
     }
 
 
-
+    private class MyOnRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            offset = 0;
+            mPresenter.loadData(offset,SIZE);
+            isRefresh = true;
+        }
+    }
 }
