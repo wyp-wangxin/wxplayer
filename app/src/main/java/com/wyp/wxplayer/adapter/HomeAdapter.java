@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.wyp.wxplayer.R;
 import com.wyp.wxplayer.Util;
 import com.wyp.wxplayer.bean.VideoBean;
-import com.wyp.wxplayer.player.WxPlayerController;
+import com.wyp.android.wxvideoplayer.player.WxPlayerController;
 import com.wyp.wxplayer.utils.myLog;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
      */
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         myLog.e(TAG,"onCreateViewHolder");
-        View itemView = View.inflate(parent.getContext(), R.layout.homepage_item, null);
+        View itemView = View.inflate(parent.getContext(), R.layout.home_item_video, null);
         MyViewHolder holder = new MyViewHolder(itemView);
         WxPlayerController controller = new WxPlayerController(mContext);
         holder.setController(controller);
@@ -59,6 +59,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         holder.mTvDescription.setText("好看的日漫更新了！");
         // 加载图片 我们没有真正的资源
         //Glide.with(holder.itemView.getContext()).load(videoBean.getPosterPic()).into(holder.mIvContentimg);
+
+
     }
 
     @Override

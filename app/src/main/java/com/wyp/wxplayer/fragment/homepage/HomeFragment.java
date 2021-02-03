@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import com.wyp.wxplayer.R;
 import com.wyp.wxplayer.adapter.HomeAdapter;
+import com.wyp.wxplayer.adapter.HomeVideoAdapter;
 import com.wyp.wxplayer.bean.VideoBean;
 import com.wyp.wxplayer.fragment.BaseFragment;
+import com.wyp.wxplayer.utils.DataUtil;
 import com.wyp.wxplayer.utils.myLog;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
 
     private HomeMvp.Presenter mPresenter;
     private List<VideoBean> mVideoBeans;
-    private HomeAdapter mHomeAdapter;
+    private HomeVideoAdapter mHomeVideoAdapter;
     private boolean isRefresh;
 
     public HomeFragment() {
@@ -58,9 +60,14 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
 
         // 设置 Adapter
         mVideoBeans = new ArrayList<>();
-        mHomeAdapter = new HomeAdapter(mVideoBeans);
-        mRecylerview.setAdapter(mHomeAdapter);
+        mHomeVideoAdapter = new HomeVideoAdapter(DataUtil.getVideoListData());
+        mRecylerview.setAdapter(mHomeVideoAdapter);
+        mRecylerview.setRecyclerListener(new RecyclerView.RecyclerListener() {
+            @Override
+            public void onViewRecycled(RecyclerView.ViewHolder holder) {
 
+            }
+        });
         mSwipeRefreshLayout.setOnRefreshListener(new MyOnRefreshListener());
     }
 
@@ -81,7 +88,7 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
         }
 
         this.mVideoBeans.addAll(videoBeen);
-        mHomeAdapter.notifyDataSetChanged();
+        mHomeVideoAdapter.notifyDataSetChanged();
     }
 
     @Override
