@@ -1,5 +1,6 @@
 package com.wyp.wxplayer.adapter;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.wyp.wxplayer.R;
 import com.wyp.wxplayer.Util;
 import com.wyp.wxplayer.bean.VideoBean;
+import com.wyp.wxplayer.player.WxPlayerController;
 import com.wyp.wxplayer.utils.myLog;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
     private static String TAG = "HomeAdapter";
     private List<VideoBean> mVideoBeans;
-
+    private Context mContext;
     public HomeAdapter(List<VideoBean> videoBeen) {
         this.mVideoBeans = videoBeen;
     }
@@ -37,7 +38,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         myLog.e(TAG,"onCreateViewHolder");
         View itemView = View.inflate(parent.getContext(), R.layout.homepage_item, null);
-        return new MyViewHolder(itemView);
+        MyViewHolder holder = new MyViewHolder(itemView);
+        WxPlayerController controller = new WxPlayerController(mContext);
+        holder.setController(controller);
+        return holder;
     }
 
     @Override
@@ -77,10 +81,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         @Bind(R.id.viewbg)
         View viewbg;
 
+
+        private WxPlayerController mController;
+       // public WxVideoPlayer mVideoPlayer;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
+            mContext = itemView.getContext();
             // 初始化图片大小
             Point point = Util.computeImgSize(640,540,itemView.getContext());
             mIvContentimg.getLayoutParams().width = point.x;
@@ -90,6 +98,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
             viewbg.getLayoutParams().width = point.x;
             viewbg.getLayoutParams().height = point.y;
             viewbg.requestLayout();
+        }
+
+        public void setController(WxPlayerController controller) {
+            mController = controller;
+            //mVideoPlayer.setController(mController);
         }
     }
 
