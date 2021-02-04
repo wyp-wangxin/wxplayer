@@ -61,6 +61,7 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
         // 设置 Adapter
         mVideoBeans = new ArrayList<>();
         mHomeVideoAdapter = new HomeVideoAdapter(DataUtil.getVideoListData());
+        mRecylerview.setHasFixedSize(true);
         mRecylerview.setAdapter(mHomeVideoAdapter);
         mRecylerview.setRecyclerListener(new RecyclerView.RecyclerListener() {
             @Override

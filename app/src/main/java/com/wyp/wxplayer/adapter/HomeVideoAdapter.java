@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 public class HomeVideoAdapter extends RecyclerView.Adapter<HomeVideoAdapter.MyViewHolder> {
-    private static String TAG = "HomeAdapter";
+    private static String TAG = "HomeVideoAdapter";
     private List<Video> mVideoList;
     private Context mContext;
 
