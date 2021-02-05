@@ -44,7 +44,7 @@ public interface IWxVideoPlayer {
      *
      * @param pos 播放位置
      */
-    void seekTo(long pos);
+    void seekTo(int pos);
 
     /**
      * 设置音量
@@ -106,14 +106,14 @@ public interface IWxVideoPlayer {
      *
      * @return 视频总时长ms
      */
-    long getDuration();
+    int getDuration();
 
     /**
      * 获取当前播放的位置，毫秒
      *
      * @return 当前播放位置，ms
      */
-    long getCurrentPosition();
+    int getCurrentPosition();
 
     /**
      * 获取视频缓冲百分比

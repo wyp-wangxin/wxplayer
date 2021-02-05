@@ -6,11 +6,11 @@ package com.wyp.wxplayer.bean;
  */
 public class Video {
     private String title;
-    private long length;
+    private int length;
     private String imageUrl;
     private String videoUrl;
 
-    public Video(String title, long length, String imageUrl, String videoUrl) {
+    public Video(String title, int length, String imageUrl, String videoUrl) {
         this.title = title;
         this.length = length;
         this.imageUrl = imageUrl;
@@ -25,11 +25,11 @@ public class Video {
         this.title = title;
     }
 
-    public long getLength() {
+    public int getLength() {
         return length;
     }
 
-    public void setLength(long length) {
+    public void setLength(int length) {
         this.length = length;
     }
 

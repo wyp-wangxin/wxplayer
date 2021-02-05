@@ -2,6 +2,7 @@ package com.wyp.wxplayer.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,8 +24,8 @@ public class HomeVideoAdapter extends RecyclerView.Adapter<HomeVideoAdapter.MyVi
     private List<Video> mVideoList;
     private Context mContext;
 
-    public HomeVideoAdapter( List<Video> videoList) {
-        //mContext = context;
+    public HomeVideoAdapter( Context context, List<Video> videoList) {
+        mContext = context;
         mVideoList = videoList;
     }
 
@@ -34,7 +35,8 @@ public class HomeVideoAdapter extends RecyclerView.Adapter<HomeVideoAdapter.MyVi
      */
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         myLog.e(TAG,"onCreateViewHolder");
-        View itemView = View.inflate(parent.getContext(), R.layout.home_item_video, null);
+
+        View itemView = LayoutInflater.from(mContext).inflate(R.layout.home_item_video, parent, false);
         MyViewHolder holder = new MyViewHolder(itemView);
         WxPlayerController controller = new WxPlayerController(mContext);
         holder.setController(controller);
@@ -67,17 +69,13 @@ public class HomeVideoAdapter extends RecyclerView.Adapter<HomeVideoAdapter.MyVi
 
         public void setController(WxPlayerController controller) {
             mController = controller;
-            mVideoPlayer.setController(mController);
+            //mVideoPlayer.setController(mController);
         }
 
         public void bindData(Video video) {
             mController.setTitle(video.getTitle());
-            mController.setLenght(video.getLength());
-            Glide.with(itemView.getContext())
-                    .load(video.getImageUrl())
-                    .placeholder(R.drawable.img_default)
-                    .crossFade()
-                    .into(mController.imageView());
+            mController.setImage(video.getImageUrl());
+            mVideoPlayer.setController(mController);
             mVideoPlayer.setUp(video.getVideoUrl(), null);
         }
     }

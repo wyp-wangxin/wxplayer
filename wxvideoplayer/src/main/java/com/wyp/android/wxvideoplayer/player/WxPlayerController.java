@@ -14,8 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.wyp.android.wxvideoplayer.R;
+import com.wyp.android.wxvideoplayer.util.NiceUtil;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -137,9 +140,6 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
         this.setOnClickListener(this);
     }
 
-    public void setNiceVideoPlayer(WxVideoPlayer niceVideoPlayer) {
-        mWxVideoPlayer = niceVideoPlayer;
-    }
 
     public void setTitle(String title) {
         mTitle.setText(title);
@@ -150,183 +150,31 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
     }
 
 
+    public void setImage(String imageUrl) {
+        Glide.with(mContext)
+                .load(imageUrl)
+                .placeholder(R.drawable.img_default)
+                .crossFade()
+                .into(mImage);
+    }
+
     public void setImage(@DrawableRes int resId) {
         mImage.setImageResource(resId);
     }
 
-    public void setLenght(long length) {
-        // mLength.setText(NiceUtil.formatTime(length));
+    public void setLenght(int length) {
+         mLength.setText(NiceUtil.formatTime(length));
     }
 
 
-//    public void setNiceVideoPlayer(INiceVideoPlayer niceVideoPlayer) {
-//        super.setNiceVideoPlayer(niceVideoPlayer);
-//        // 给播放器配置视频链接地址
-//        if (clarities != null && clarities.size() > 1) {
-//            mNiceVideoPlayer.setUp(clarities.get(defaultClarityIndex).videoUrl, null);
-//        }
-//    }
-
-
-//    protected void onPlayStateChanged(int playState) {
-//        switch (playState) {
-//            case NiceVideoPlayer.STATE_IDLE:
-//                break;
-//            case NiceVideoPlayer.STATE_PREPARING:
-//                mImage.setVisibility(View.GONE);
-//                mLoading.setVisibility(View.VISIBLE);
-//                mLoadText.setText("正在准备...");
-//                mError.setVisibility(View.GONE);
-//                mCompleted.setVisibility(View.GONE);
-//                mTop.setVisibility(View.GONE);
-//                mBottom.setVisibility(View.GONE);
-//                mCenterStart.setVisibility(View.GONE);
-//                mLength.setVisibility(View.GONE);
-//                break;
-//            case NiceVideoPlayer.STATE_PREPARED:
-//                startUpdateProgressTimer();
-//                break;
-//            case NiceVideoPlayer.STATE_PLAYING:
-//                mLoading.setVisibility(View.GONE);
-//                mRestartPause.setImageResource(R.drawable.ic_player_pause);
-//                startDismissTopBottomTimer();
-//                break;
-//            case NiceVideoPlayer.STATE_PAUSED:
-//                mLoading.setVisibility(View.GONE);
-//                mRestartPause.setImageResource(R.drawable.ic_player_start);
-//                cancelDismissTopBottomTimer();
-//                break;
-//            case NiceVideoPlayer.STATE_BUFFERING_PLAYING:
-//                mLoading.setVisibility(View.VISIBLE);
-//                mRestartPause.setImageResource(R.drawable.ic_player_pause);
-//                mLoadText.setText("正在缓冲...");
-//                startDismissTopBottomTimer();
-//                break;
-//            case NiceVideoPlayer.STATE_BUFFERING_PAUSED:
-//                mLoading.setVisibility(View.VISIBLE);
-//                mRestartPause.setImageResource(R.drawable.ic_player_start);
-//                mLoadText.setText("正在缓冲...");
-//                cancelDismissTopBottomTimer();
-//                break;
-//            case NiceVideoPlayer.STATE_ERROR:
-//                cancelUpdateProgressTimer();
-//                setTopBottomVisible(false);
-//                mTop.setVisibility(View.VISIBLE);
-//                mError.setVisibility(View.VISIBLE);
-//                break;
-//            case NiceVideoPlayer.STATE_COMPLETED:
-//                cancelUpdateProgressTimer();
-//                setTopBottomVisible(false);
-//                mImage.setVisibility(View.VISIBLE);
-//                mCompleted.setVisibility(View.VISIBLE);
-//                break;
-//        }
-//    }
-//
-//    protected void onPlayModeChanged(int playMode) {
-//        switch (playMode) {
-//            case NiceVideoPlayer.MODE_NORMAL:
-//                mBack.setVisibility(View.GONE);
-//                mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
-//                mFullScreen.setVisibility(View.VISIBLE);
-//                mClarity.setVisibility(View.GONE);
-//                mBatteryTime.setVisibility(View.GONE);
-//                if (hasRegisterBatteryReceiver) {
-//                    mContext.unregisterReceiver(mBatterReceiver);
-//                    hasRegisterBatteryReceiver = false;
-//                }
-//                break;
-//            case NiceVideoPlayer.MODE_FULL_SCREEN:
-//                mBack.setVisibility(View.VISIBLE);
-//                mFullScreen.setVisibility(View.GONE);
-//                mFullScreen.setImageResource(R.drawable.ic_player_shrink);
-//                if (clarities != null && clarities.size() > 1) {
-//                    mClarity.setVisibility(View.VISIBLE);
-//                }
-//                mBatteryTime.setVisibility(View.VISIBLE);
-//                if (!hasRegisterBatteryReceiver) {
-//                    mContext.registerReceiver(mBatterReceiver,
-//                            new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-//                    hasRegisterBatteryReceiver = true;
-//                }
-//                break;
-//            case NiceVideoPlayer.MODE_TINY_WINDOW:
-//                mBack.setVisibility(View.VISIBLE);
-//                mClarity.setVisibility(View.GONE);
-//                break;
-//        }
-//    }
-//
-    protected void reset() {
-        topBottomVisible = false;
-        cancelUpdateProgressTimer();
-        cancelDismissTopBottomTimer();
-        mSeek.setProgress(0);
-        mSeek.setSecondaryProgress(0);
-
-        mCenterStart.setVisibility(View.VISIBLE);
-        mImage.setVisibility(View.VISIBLE);
-
-        mBottom.setVisibility(View.GONE);
-        mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
-
-        mLength.setVisibility(View.VISIBLE);
-
-        mTop.setVisibility(View.VISIBLE);
-        mBack.setVisibility(View.GONE);
-
-        mLoading.setVisibility(View.GONE);
-        mError.setVisibility(View.GONE);
-        mCompleted.setVisibility(View.GONE);
+    public void setNiceVideoPlayer(WxVideoPlayer niceVideoPlayer) {
+        mWxVideoPlayer = niceVideoPlayer;
+        if (mWxVideoPlayer.isIdle()) {
+            mBack.setVisibility(View.GONE);
+            mTop.setVisibility(View.VISIBLE);
+            mBottom.setVisibility(View.GONE);
+        }
     }
-//
-//    /**
-//     * 尽量不要在onClick中直接处理控件的隐藏、显示及各种UI逻辑。
-//     * UI相关的逻辑都尽量到{@link #onPlayStateChanged}和{@link #onPlayModeChanged}中处理.
-//     */
-//    @Override
-//    public void onClick(View v) {
-//        if (v == mCenterStart) {
-//            if (mNiceVideoPlayer.isIdle()) {
-//                mNiceVideoPlayer.start();
-//            }
-//        } else if (v == mBack) {
-//            if (mNiceVideoPlayer.isFullScreen()) {
-//                mNiceVideoPlayer.exitFullScreen();
-//            } else if (mNiceVideoPlayer.isTinyWindow()) {
-//                mNiceVideoPlayer.exitTinyWindow();
-//            }
-//        } else if (v == mRestartPause) {
-//            if (mNiceVideoPlayer.isPlaying() || mNiceVideoPlayer.isBufferingPlaying()) {
-//                mNiceVideoPlayer.pause();
-//            } else if (mNiceVideoPlayer.isPaused() || mNiceVideoPlayer.isBufferingPaused()) {
-//                mNiceVideoPlayer.restart();
-//            }
-//        } else if (v == mFullScreen) {
-//            if (mNiceVideoPlayer.isNormal() || mNiceVideoPlayer.isTinyWindow()) {
-//                mNiceVideoPlayer.enterFullScreen();
-//            } else if (mNiceVideoPlayer.isFullScreen()) {
-//                mNiceVideoPlayer.exitFullScreen();
-//            }
-//        } else if (v == mClarity) {
-//            setTopBottomVisible(false); // 隐藏top、bottom
-//            mClarityDialog.show();     // 显示清晰度对话框
-//        } else if (v == mRetry) {
-//            mNiceVideoPlayer.restart();
-//        } else if (v == mReplay) {
-//            mRetry.performClick();
-//        } else if (v == mShare) {
-//            Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show();
-//        } else if (v == this) {
-//            if (mNiceVideoPlayer.isPlaying()
-//                    || mNiceVideoPlayer.isPaused()
-//                    || mNiceVideoPlayer.isBufferingPlaying()
-//                    || mNiceVideoPlayer.isBufferingPaused()) {
-//                setTopBottomVisible(!topBottomVisible);
-//            }
-//        }
-//    }
-//
 
     /**
      * 设置top、bottom的显示和隐藏
@@ -345,6 +193,251 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
             cancelDismissTopBottomTimer();
         }
     }
+
+    public void setControllerState(int playerState, int playState) {
+        switch (playerState) {
+            case WxVideoPlayer.PLAYER_NORMAL:
+                mBack.setVisibility(View.GONE);
+                mFullScreen.setVisibility(View.VISIBLE);
+                mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
+                break;
+            case WxVideoPlayer.PLAYER_FULL_SCREEN:
+                mBack.setVisibility(View.VISIBLE);
+                mFullScreen.setVisibility(View.VISIBLE);
+                mFullScreen.setImageResource(R.drawable.ic_player_shrink);
+                break;
+            case WxVideoPlayer.PLAYER_TINY_WINDOW:
+                mFullScreen.setVisibility(View.GONE);
+                break;
+        }
+        switch (playState) {
+            case WxVideoPlayer.STATE_IDLE:
+                break;
+            case WxVideoPlayer.STATE_PREPARING:
+                // 只显示准备中动画，其他不显示
+                mImage.setVisibility(View.GONE);
+                mLoading.setVisibility(View.VISIBLE);
+                mLoadText.setText("正在准备...");
+                mError.setVisibility(View.GONE);
+                mCompleted.setVisibility(View.GONE);
+                mTop.setVisibility(View.GONE);
+                mCenterStart.setVisibility(View.GONE);
+                break;
+            case WxVideoPlayer.STATE_PREPARED:
+                startUpdateProgressTimer();
+                break;
+            case WxVideoPlayer.STATE_PLAYING:
+                mLoading.setVisibility(View.GONE);
+                mRestartPause.setImageResource(R.drawable.ic_player_pause);
+                startDismissTopBottomTimer();
+                break;
+            case WxVideoPlayer.STATE_PAUSED:
+                mLoading.setVisibility(View.GONE);
+                mRestartPause.setImageResource(R.drawable.ic_player_start);
+                cancelDismissTopBottomTimer();
+                break;
+            case WxVideoPlayer.STATE_BUFFERING_PLAYING:
+                mLoading.setVisibility(View.VISIBLE);
+                mRestartPause.setImageResource(R.drawable.ic_player_pause);
+                mLoadText.setText("正在缓冲...");
+                startDismissTopBottomTimer();
+                break;
+            case WxVideoPlayer.STATE_BUFFERING_PAUSED:
+                mLoading.setVisibility(View.VISIBLE);
+                mRestartPause.setImageResource(R.drawable.ic_player_start);
+                mLoadText.setText("正在缓冲...");
+                cancelDismissTopBottomTimer();
+            case WxVideoPlayer.STATE_COMPLETED:
+                cancelUpdateProgressTimer();
+                setTopBottomVisible(false);
+                mImage.setVisibility(View.VISIBLE);
+                mCompleted.setVisibility(View.VISIBLE);
+                if (mWxVideoPlayer.isFullScreen()) {
+                    mWxVideoPlayer.exitFullScreen();
+                }
+                if (mWxVideoPlayer.isTinyWindow()) {
+                    mWxVideoPlayer.exitTinyWindow();
+                }
+                break;
+            case WxVideoPlayer.STATE_ERROR:
+                cancelUpdateProgressTimer();
+                setTopBottomVisible(false);
+                mTop.setVisibility(View.VISIBLE);
+                mError.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+
+    private void startUpdateProgressTimer() {
+        cancelUpdateProgressTimer();
+        if (mUpdateProgressTimer == null) {
+            mUpdateProgressTimer = new Timer();
+        }
+        if (mUpdateProgressTimerTask == null) {
+            mUpdateProgressTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    WxPlayerController.this.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateProgress();
+                        }
+                    });
+                }
+            };
+        }
+        mUpdateProgressTimer.schedule(mUpdateProgressTimerTask, 0, 300);
+    }
+
+    private void updateProgress() {
+        int position = mWxVideoPlayer.getCurrentPosition();
+        int duration = mWxVideoPlayer.getDuration();
+        int bufferPercentage = mWxVideoPlayer.getBufferPercentage();
+        mSeek.setSecondaryProgress(bufferPercentage);
+        int progress = (int) (100f * position / duration);
+        mSeek.setProgress(progress);
+        mPosition.setText(NiceUtil.formatTime(position));
+        mDuration.setText(NiceUtil.formatTime(duration));
+    }
+
+    /**
+     * 取消更新进度的计时器。
+     */
+    protected void cancelUpdateProgressTimer() {
+        if (mUpdateProgressTimer != null) {
+            mUpdateProgressTimer.cancel();
+            mUpdateProgressTimer = null;
+        }
+        if (mUpdateProgressTimerTask != null) {
+            mUpdateProgressTimerTask.cancel();
+            mUpdateProgressTimerTask = null;
+        }
+    }
+
+
+    /**
+     * 开启top、bottom自动消失的timer
+     */
+    private void startDismissTopBottomTimer() {
+        cancelDismissTopBottomTimer();
+        if (mDismissTopBottomCountDownTimer == null) {
+            mDismissTopBottomCountDownTimer = new CountDownTimer(8000, 8000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    setTopBottomVisible(false);
+                }
+            };
+        }
+        mDismissTopBottomCountDownTimer.start();
+    }
+
+    /**
+     * 取消top、bottom自动消失的timer
+     */
+    private void cancelDismissTopBottomTimer() {
+        if (mDismissTopBottomCountDownTimer != null) {
+            mDismissTopBottomCountDownTimer.cancel();
+        }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        cancelDismissTopBottomTimer();
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        if (mWxVideoPlayer.isBufferingPaused() || mWxVideoPlayer.isPaused()) {
+            mWxVideoPlayer.restart();
+        }
+        int position = (int) (mWxVideoPlayer.getDuration() * seekBar.getProgress() / 100f);
+        mWxVideoPlayer.seekTo(position);
+        startDismissTopBottomTimer();
+    }
+
+    /**
+     * 控制器恢复到初始状态
+     */
+    public void reset() {
+        topBottomVisible = false;
+        cancelUpdateProgressTimer();
+        cancelDismissTopBottomTimer();
+        mSeek.setProgress(0);
+        mSeek.setSecondaryProgress(0);
+
+        mCenterStart.setVisibility(View.VISIBLE);
+        mImage.setVisibility(View.VISIBLE);
+
+        mBottom.setVisibility(View.GONE);
+        mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
+
+        mTop.setVisibility(View.VISIBLE);
+        mBack.setVisibility(View.GONE);
+
+        mLoading.setVisibility(View.GONE);
+        mError.setVisibility(View.GONE);
+        mCompleted.setVisibility(View.GONE);
+    }
+//
+//    /**
+//     * 尽量不要在onClick中直接处理控件的隐藏、显示及各种UI逻辑。
+//     * UI相关的逻辑都尽量到{@link #onPlayStateChanged}和{@link #onPlayModeChanged}中处理.
+//     */
+    @Override
+    public void onClick(View v) {
+        if (v == mCenterStart) {
+            if (mWxVideoPlayer.isIdle()) {
+                mWxVideoPlayer.start();
+            }
+        } else if (v == mBack) {
+            if (mWxVideoPlayer.isFullScreen()) {
+                mWxVideoPlayer.exitFullScreen();
+            } else if (mWxVideoPlayer.isTinyWindow()) {
+                mWxVideoPlayer.exitTinyWindow();
+            }
+        } else if (v == mRestartPause) {
+            if (mWxVideoPlayer.isPlaying() || mWxVideoPlayer.isBufferingPlaying()) {
+                mWxVideoPlayer.pause();
+            } else if (mWxVideoPlayer.isPaused() || mWxVideoPlayer.isBufferingPaused()) {
+                mWxVideoPlayer.restart();
+            }
+        } else if (v == mFullScreen) {
+            if (mWxVideoPlayer.isNormal()) {
+                mWxVideoPlayer.enterFullScreen();
+            } else if (mWxVideoPlayer.isFullScreen()) {
+                mWxVideoPlayer.exitFullScreen();
+            }
+        } else if (v == mRetry) {
+            mWxVideoPlayer.release();
+            mWxVideoPlayer.start();
+        } else if (v == mReplay) {
+            mRetry.performClick();
+        } else if (v == mShare) {
+            Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show();
+        } else if (v == this) {
+            if (mWxVideoPlayer.isPlaying()
+                    || mWxVideoPlayer.isPaused()
+                    || mWxVideoPlayer.isBufferingPlaying()
+                    || mWxVideoPlayer.isBufferingPaused()) {
+                setTopBottomVisible(!topBottomVisible);
+            }
+        }
+    }
+
+
+
+
 
 //    /**
 //     * 开启top、bottom自动消失的timer
@@ -408,72 +501,4 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
         return false;
     }
 
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
-
-
-    /**
-     * 取消更新进度的计时器。
-     */
-    protected void cancelUpdateProgressTimer() {
-        if (mUpdateProgressTimer != null) {
-            mUpdateProgressTimer.cancel();
-            mUpdateProgressTimer = null;
-        }
-        if (mUpdateProgressTimerTask != null) {
-            mUpdateProgressTimerTask.cancel();
-            mUpdateProgressTimerTask = null;
-        }
-    }
-
-
-    /**
-     * 开启top、bottom自动消失的timer
-     */
-    private void startDismissTopBottomTimer() {
-        cancelDismissTopBottomTimer();
-        if (mDismissTopBottomCountDownTimer == null) {
-            mDismissTopBottomCountDownTimer = new CountDownTimer(8000, 8000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-
-                }
-
-                @Override
-                public void onFinish() {
-                    setTopBottomVisible(false);
-                }
-            };
-        }
-        mDismissTopBottomCountDownTimer.start();
-    }
-
-    /**
-     * 取消top、bottom自动消失的timer
-     */
-    private void cancelDismissTopBottomTimer() {
-        if (mDismissTopBottomCountDownTimer != null) {
-            mDismissTopBottomCountDownTimer.cancel();
-        }
-    }
 }
