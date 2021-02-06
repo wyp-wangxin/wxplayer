@@ -32,7 +32,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1parpared(JNIEnv *env, jobject instance,
+Java_com_wyp_android_wxvideoplayer_player_WxPlayer_n_1parpared(JNIEnv *env, jobject instance,
                                                       jstring source_) {
     const char *source = env->GetStringUTFChars(source_, 0);
 
@@ -58,7 +58,7 @@ void *startCallBack(void *data)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1start(JNIEnv *env, jobject instance) {
+Java_com_wyp_android_wxvideoplayer_player_WxPlayer_n_1start(JNIEnv *env, jobject instance) {
 
     // TODO
     if(fFmpeg != NULL)
@@ -68,7 +68,7 @@ Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1start(JNIEnv *env, jobject
 
 }extern "C"
 JNIEXPORT void JNICALL
-Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1pause(JNIEnv *env, jobject instance) {
+Java_com_wyp_android_wxvideoplayer_player_WxPlayer_n_1pause(JNIEnv *env, jobject instance) {
 
     // TODO
     if(fFmpeg != NULL)
@@ -80,7 +80,7 @@ Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1pause(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1resume(JNIEnv *env, jobject instance) {
+Java_com_wyp_android_wxvideoplayer_player_WxPlayer_n_1resume(JNIEnv *env, jobject instance) {
 
     // TODO
     if(fFmpeg != NULL)
@@ -92,7 +92,7 @@ Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1resume(JNIEnv *env, jobjec
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1stop(JNIEnv *env, jobject instance) {
+Java_com_wyp_android_wxvideoplayer_player_WxPlayer_n_1stop(JNIEnv *env, jobject instance) {
 
     // TODO
 
@@ -126,7 +126,7 @@ Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1stop(JNIEnv *env, jobject 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1seek(JNIEnv *env, jobject thiz, jint secds) {
+Java_com_wyp_android_wxvideoplayer_player_WxPlayer_n_1seek(JNIEnv *env, jobject thiz, jint secds) {
     // TODO: implement n_seek()
     if(fFmpeg != NULL)
     {
@@ -136,7 +136,7 @@ Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1seek(JNIEnv *env, jobject 
 }
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_wyp_android_wxvideoplayer_player_WlPlayer_n_1duration(JNIEnv *env, jobject thiz) {
+Java_com_wyp_android_wxvideoplayer_player_WxPlayer_n_1duration(JNIEnv *env, jobject thiz) {
     // TODO: implement n_duration()
     if(fFmpeg != NULL)
     {

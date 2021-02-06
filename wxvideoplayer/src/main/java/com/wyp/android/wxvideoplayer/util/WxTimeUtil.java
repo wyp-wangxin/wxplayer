@@ -3,7 +3,7 @@ package com.wyp.android.wxvideoplayer.util;
  * Created by ywl on 2017-12-22.
  */
 
-public class WlTimeUtil {
+public class WxTimeUtil {
 
     /**
      * format times

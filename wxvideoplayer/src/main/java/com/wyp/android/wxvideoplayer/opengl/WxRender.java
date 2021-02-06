@@ -17,7 +17,7 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class WlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener{
+public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener{
 
 
     public static final int RENDER_YUV = 1;
@@ -84,7 +84,7 @@ public class WlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     private OnSurfaceCreateListener onSurfaceCreateListener;
     private OnRenderListener onRenderListener;
 
-    public WlRender(Context context)
+    public WxRender(Context context)
     {
         this.context = context;
         vertexBuffer = ByteBuffer.allocateDirect(vertexData.length * 4)
@@ -167,9 +167,9 @@ public class WlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
 
     private void initRenderYUV()
     {
-        String vertexSource = WlShaderUtil.readRawTxt(context, R.raw.vertex_shader);
-        String fragmentSource = WlShaderUtil.readRawTxt(context, R.raw.fragment_yuv);
-        program_yuv = WlShaderUtil.createProgram(vertexSource, fragmentSource);
+        String vertexSource = WxShaderUtil.readRawTxt(context, R.raw.vertex_shader);
+        String fragmentSource = WxShaderUtil.readRawTxt(context, R.raw.fragment_yuv);
+        program_yuv = WxShaderUtil.createProgram(vertexSource, fragmentSource);
 
         avPosition_yuv = GLES20.glGetAttribLocation(program_yuv, "av_Position");
         afPosition_yuv = GLES20.glGetAttribLocation(program_yuv, "af_Position");
@@ -240,9 +240,9 @@ public class WlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
 
     private void initRenderMediacodec()
     {
-        String vertexSource = WlShaderUtil.readRawTxt(context, R.raw.vertex_shader);
-        String fragmentSource = WlShaderUtil.readRawTxt(context, R.raw.fragment_mediacodec);
-        program_mediacodec = WlShaderUtil.createProgram(vertexSource, fragmentSource);
+        String vertexSource = WxShaderUtil.readRawTxt(context, R.raw.vertex_shader);
+        String fragmentSource = WxShaderUtil.readRawTxt(context, R.raw.fragment_mediacodec);
+        program_mediacodec = WxShaderUtil.createProgram(vertexSource, fragmentSource);
 
         avPosition_mediacodec = GLES20.glGetAttribLocation(program_mediacodec, "av_Position");
         afPosition_mediacodec = GLES20.glGetAttribLocation(program_mediacodec, "af_Position");
@@ -301,7 +301,7 @@ public class WlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
 
     public void setMatrix(int width, int height) {
 
-        WlShaderUtil.initMatrix(matrix);
+        WxShaderUtil.initMatrix(matrix);
         if(yuv_wdith > 0 && yuv_height > 0)
         {
             float screen_r =(float) 1.0 * width / height;
@@ -310,13 +310,13 @@ public class WlRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
             if(screen_r > picture_r) //图片宽度缩放
             {
                 float r =(float) (width / (1.0 * height / yuv_height * yuv_wdith));
-                WlShaderUtil.orthoM(-r, r, -1, 1, matrix);
+                WxShaderUtil.orthoM(-r, r, -1, 1, matrix);
                 matrixBuffer.clear();
                 matrixBuffer.put(matrix,0,matrix.length);
                 matrixBuffer.position(0);
             } else{//图片高度缩放
                 float r =(float)( height / (1.0 * width / yuv_wdith * yuv_height));
-                WlShaderUtil.orthoM(-1, 1, -r, r, matrix);
+                WxShaderUtil.orthoM(-1, 1, -r, r, matrix);
                 matrixBuffer.clear();
                 matrixBuffer.put(matrix,0,matrix.length);
                 matrixBuffer.position(0);

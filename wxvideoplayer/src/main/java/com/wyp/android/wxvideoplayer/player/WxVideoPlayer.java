@@ -16,6 +16,14 @@ import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.wyp.android.wxvideoplayer.WlTimeInfoBean;
+import com.wyp.android.wxvideoplayer.listener.WxOnCompleteListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnErrorListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnLoadListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnParparedListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnPauseResumeListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnTimeInfoListener;
+import com.wyp.android.wxvideoplayer.log.MyLog;
 import com.wyp.android.wxvideoplayer.util.LogUtil;
 import com.wyp.android.wxvideoplayer.util.NiceUtil;
 
@@ -56,11 +64,12 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
     private WxPlayerController mController;
     private String mUrl;
     private Map<String, String> mHeaders;
-    private MediaPlayer mMediaPlayer;
+    //private MediaPlayer mMediaPlayer;
+    private WxPlayer mWxPlayer;
     private TextureView mTextureView;
     private SurfaceTexture mSurfaceTexture;
     private int mBufferPercentage;
-    private MediaPlayer.OnPreparedListener mOnPreparedListener
+    /*private MediaPlayer.OnPreparedListener mOnPreparedListener
             = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
@@ -145,8 +154,49 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
             mBufferPercentage = percent;
         }
+    };*/
+    private WxOnCompleteListener mWxOnCompleteListener =new WxOnCompleteListener() {
+        @Override
+        public void onComplete() {
+
+        }
     };
 
+    private WxOnErrorListener mWxOnErrorListener = new WxOnErrorListener() {
+        @Override
+        public void onError(int code, String msg) {
+
+        }
+    };
+
+    private WxOnLoadListener mWxOnLoadListener = new WxOnLoadListener() {
+        @Override
+        public void onLoad(Boolean bool) {
+
+        }
+    };
+
+    private WxOnParparedListener mWxOnParparedListener = new WxOnParparedListener() {
+        @Override
+        public void onParpared() {
+            MyLog.d("准备好了，可以开始播放视频了");
+            mWxPlayer.start();
+        }
+    };
+
+    private WxOnPauseResumeListener mWxOnPauseResumeListener = new WxOnPauseResumeListener() {
+        @Override
+        public void onPause(boolean pause) {
+
+        }
+    };
+
+    private WxOnTimeInfoListener mWxOnTimeInfoListener = new WxOnTimeInfoListener() {
+        @Override
+        public void onTimeInfo(WlTimeInfoBean timeInfoBean) {
+
+        }
+    };
 
     public WxVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -480,18 +530,14 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
 
 
     private void initMediaPlayer() {
-        if (mMediaPlayer == null) {
-            mMediaPlayer = new MediaPlayer();
-
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mMediaPlayer.setScreenOnWhilePlaying(true);
-
-            mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
-            mMediaPlayer.setOnVideoSizeChangedListener(mOnVideoSizeChangedListener);
-            mMediaPlayer.setOnCompletionListener(mOnCompletionListener);
-            mMediaPlayer.setOnErrorListener(mOnErrorListener);
-            mMediaPlayer.setOnInfoListener(mOnInfoListener);
-            mMediaPlayer.setOnBufferingUpdateListener(mOnBufferingUpdateListener);
+        if (mWxPlayer == null) {
+            mWxPlayer = new WxPlayer();
+            mWxPlayer.setWxOnCompleteListener(mWxOnCompleteListener);
+            mWxPlayer.setWxOnErrorListener(mWxOnErrorListener);
+            mWxPlayer.setWxOnLoadListener(mWxOnLoadListener);
+            mWxPlayer.setWxOnParparedListener(mWxOnParparedListener);
+            mWxPlayer.setWlOnPauseResumeListener(mWxOnPauseResumeListener);
+            mWxPlayer.setWxOnTimeInfoListener(mWxOnTimeInfoListener);
         }
     }
 

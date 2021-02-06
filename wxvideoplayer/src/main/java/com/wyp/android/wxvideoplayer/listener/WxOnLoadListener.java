@@ -1,5 +1,5 @@
 package com.wyp.android.wxvideoplayer.listener;
 
-public interface WlOnLoadListener {
+public interface WxOnLoadListener {
     void onLoad(Boolean bool);
 }

@@ -6,24 +6,24 @@ import android.text.TextUtils;
 import android.view.Surface;
 
 import com.wyp.android.wxvideoplayer.WlTimeInfoBean;
-import com.wyp.android.wxvideoplayer.listener.WlOnCompleteListener;
-import com.wyp.android.wxvideoplayer.listener.WlOnErrorListener;
-import com.wyp.android.wxvideoplayer.listener.WlOnLoadListener;
-import com.wyp.android.wxvideoplayer.listener.WlOnParparedListener;
-import com.wyp.android.wxvideoplayer.listener.WlOnPauseResumeListener;
-import com.wyp.android.wxvideoplayer.listener.WlOnTimeInfoListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnCompleteListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnErrorListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnLoadListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnParparedListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnPauseResumeListener;
+import com.wyp.android.wxvideoplayer.listener.WxOnTimeInfoListener;
 import com.wyp.android.wxvideoplayer.log.MyLog;
-import com.wyp.android.wxvideoplayer.opengl.WlGLSurfaceView;
-import com.wyp.android.wxvideoplayer.opengl.WlRender;
-import com.wyp.android.wxvideoplayer.util.WlVideoSupportUitl;
+import com.wyp.android.wxvideoplayer.opengl.WxGLSurfaceView;
+import com.wyp.android.wxvideoplayer.opengl.WxRender;
+import com.wyp.android.wxvideoplayer.util.WxVideoSupportUitl;
 
 import java.nio.ByteBuffer;
 
 /**
- * Created by yangw on 2018-2-28.
+ * Created by wyp on 2021/2/6.
  */
 
-public class WlPlayer {
+public class WxPlayer {
 
     static {
         System.loadLibrary("native-lib");
@@ -40,24 +40,24 @@ public class WlPlayer {
     private static String source;//数据源
     private static WlTimeInfoBean wlTimeInfoBean;
     private static int duration = -1;
-	private static boolean playNext = false;
-	
-    private WlOnParparedListener wlOnParparedListener;
-    private WlOnLoadListener wlOnLoadListener;
-    private WlOnPauseResumeListener wlOnPauseResumeListener;
-    private WlOnTimeInfoListener wlOnTimeInfoListener;
-    private WlOnErrorListener wlOnErrorListener;
-    private WlOnCompleteListener wlOnCompleteListener;
-    private WlGLSurfaceView wlGLSurfaceView;
+    private static boolean playNext = false;
+
+    private WxOnParparedListener mWxOnParparedListener;
+    private WxOnLoadListener mWxOnLoadListener;
+    private WxOnPauseResumeListener wlOnPauseResumeListener;
+    private WxOnTimeInfoListener mWxOnTimeInfoListener;
+    private WxOnErrorListener mWxOnErrorListener;
+    private WxOnCompleteListener mWxOnCompleteListener;
+    private WxGLSurfaceView mWxGLSurfaceView;
 
     private MediaFormat mediaFormat;
     private MediaCodec mediaCodec;
     private Surface surface;
     private MediaCodec.BufferInfo info;
-    private WlRender mWlRender;
+    private WxRender mWxRender;
 
 
-    public WlPlayer()
+    public WxPlayer()
     {}
 
     /**
@@ -69,10 +69,10 @@ public class WlPlayer {
         this.source = source;
     }
 
-    public void setWlGLSurfaceView(WlGLSurfaceView wlGLSurfaceView) {
-        this.wlGLSurfaceView = wlGLSurfaceView;
-        mWlRender = wlGLSurfaceView.getWlRender();
-        mWlRender.setOnSurfaceCreateListener(new WlRender.OnSurfaceCreateListener() {
+    public void setWxGLSurfaceView(WxGLSurfaceView wxGLSurfaceView) {
+        this.mWxGLSurfaceView = wxGLSurfaceView;
+        mWxRender = wxGLSurfaceView.getWxRender();
+        mWxRender.setOnSurfaceCreateListener(new WxRender.OnSurfaceCreateListener() {
             @Override
             public void onSurfaceCreate(Surface s) {
                 if(surface == null)
@@ -86,31 +86,31 @@ public class WlPlayer {
 
     /**
      * 设置准备接口回调
-     * @param wlOnParparedListener
+     * @param wxOnParparedListener
      */
-    public void setWlOnParparedListener(WlOnParparedListener wlOnParparedListener)
+    public void setWxOnParparedListener(WxOnParparedListener wxOnParparedListener)
     {
-        this.wlOnParparedListener = wlOnParparedListener;
+        this.mWxOnParparedListener = wxOnParparedListener;
     }
 
-    public void setWlOnLoadListener(WlOnLoadListener wlOnLoadListener) {
-        this.wlOnLoadListener = wlOnLoadListener;
+    public void setWxOnLoadListener(WxOnLoadListener wxOnLoadListener) {
+        this.mWxOnLoadListener = wxOnLoadListener;
     }
 
-    public void setWlOnPauseResumeListener(WlOnPauseResumeListener wlOnPauseResumeListener) {
+    public void setWlOnPauseResumeListener(WxOnPauseResumeListener wlOnPauseResumeListener) {
         this.wlOnPauseResumeListener = wlOnPauseResumeListener;
     }
 
-    public void setWlOnTimeInfoListener(WlOnTimeInfoListener wlOnTimeInfoListener) {
-        this.wlOnTimeInfoListener = wlOnTimeInfoListener;
+    public void setWxOnTimeInfoListener(WxOnTimeInfoListener wxOnTimeInfoListener) {
+        this.mWxOnTimeInfoListener = wxOnTimeInfoListener;
     }
 
-    public void setWlOnErrorListener(WlOnErrorListener wlOnErrorListener) {
-        this.wlOnErrorListener = wlOnErrorListener;
+    public void setWxOnErrorListener(WxOnErrorListener wxOnErrorListener) {
+        this.mWxOnErrorListener = wxOnErrorListener;
     }
 
-    public void setWlOnCompleteListener(WlOnCompleteListener wlOnCompleteListener) {
-        this.wlOnCompleteListener = wlOnCompleteListener;
+    public void setWxOnCompleteListener(WxOnCompleteListener wxOnCompleteListener) {
+        this.mWxOnCompleteListener = wxOnCompleteListener;
     }
 
     public void parpared()
@@ -126,7 +126,6 @@ public class WlPlayer {
                 n_parpared(source);
             }
         }).start();
-
     }
 
     public void start()
@@ -201,9 +200,9 @@ public class WlPlayer {
      */
     public void onCallParpared()
     {
-        if(wlOnParparedListener != null)
+        if(mWxOnParparedListener != null)
         {
-            wlOnParparedListener.onParpared();
+            mWxOnParparedListener.onParpared();
         }
     }
 
@@ -215,19 +214,19 @@ public class WlPlayer {
     private native void n_seek(int secds);
     private native int n_duration();
 
-    public WlOnLoadListener getWlOnLoadListener() {
-        return wlOnLoadListener;
+    public WxOnLoadListener getWxOnLoadListener() {
+        return mWxOnLoadListener;
     }
 
     public void onCallLoad(boolean bool){
-        if(wlOnLoadListener!=null){
-            wlOnLoadListener.onLoad(bool);
+        if(mWxOnLoadListener !=null){
+            mWxOnLoadListener.onLoad(bool);
         }
     }
 
     public void onCallTimeInfo(int currentTime, int totalTime)
     {
-        if(wlOnTimeInfoListener != null)
+        if(mWxOnTimeInfoListener != null)
         {
             if(wlTimeInfoBean == null)
             {
@@ -235,26 +234,26 @@ public class WlPlayer {
             }
             wlTimeInfoBean.setCurrentTime(currentTime);
             wlTimeInfoBean.setTotalTime(totalTime);
-            wlOnTimeInfoListener.onTimeInfo(wlTimeInfoBean);
+            mWxOnTimeInfoListener.onTimeInfo(wlTimeInfoBean);
         }
     }
 
     public void onCallError(int code, String msg)
     {
-        if(wlOnErrorListener != null)
+        if(mWxOnErrorListener != null)
         {
             stop();
-            wlOnErrorListener.onError(code, msg);
+            mWxOnErrorListener.onError(code, msg);
         }
     }
 
 
     public void onCallComplete()
     {
-        if(wlOnCompleteListener != null)
+        if(mWxOnCompleteListener != null)
         {
             stop();
-            wlOnCompleteListener.onComplete();
+            mWxOnCompleteListener.onComplete();
         }
     }
 
@@ -275,15 +274,15 @@ public class WlPlayer {
     public void onCallRenderYUV(int width, int height, byte[] y, byte[] u, byte[] v)
     {
         MyLog.d("获取到视频的yuv数据");
-        if(wlGLSurfaceView != null)
+        if(mWxGLSurfaceView != null)
         {
-            wlGLSurfaceView.getWlRender().setRenderType(WlRender.RENDER_YUV);
-            wlGLSurfaceView.setYUVData(width, height, y, u, v);
+            mWxGLSurfaceView.getWxRender().setRenderType(WxRender.RENDER_YUV);
+            mWxGLSurfaceView.setYUVData(width, height, y, u, v);
         }
     }
-	public boolean onCallIsSupportMediaCodec(String ffcodecname)
+    public boolean onCallIsSupportMediaCodec(String ffcodecname)
     {
-        return WlVideoSupportUitl.isSupportCodec(ffcodecname);
+        return WxVideoSupportUitl.isSupportCodec(ffcodecname);
     }
 
 
@@ -300,9 +299,9 @@ public class WlPlayer {
         if(surface != null)
         {
             try {
-                mWlRender.setDataWidthHegit(width,height);
-                wlGLSurfaceView.getWlRender().setRenderType(WlRender.RENDER_MEDIACODEC);
-                String mime = WlVideoSupportUitl.findVideoCodecName(codecName);
+                mWxRender.setDataWidthHegit(width,height);
+                mWxGLSurfaceView.getWxRender().setRenderType(WxRender.RENDER_MEDIACODEC);
+                String mime = WxVideoSupportUitl.findVideoCodecName(codecName);
                 mediaFormat = MediaFormat.createVideoFormat(mime, width, height);
                 mediaFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, width * height);
                 mediaFormat.setByteBuffer("csd-0", ByteBuffer.wrap(csd_0));
@@ -322,9 +321,9 @@ public class WlPlayer {
         }
         else
         {
-            if(wlOnErrorListener != null)
+            if(mWxOnErrorListener != null)
             {
-                wlOnErrorListener.onError(2001, "surface is null");
+                mWxOnErrorListener.onError(2001, "surface is null");
             }
         }
     }

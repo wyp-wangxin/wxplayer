@@ -8,7 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class WlShaderUtil {
+public class WxShaderUtil {
 
 
     public static String readRawTxt(Context context, int rawId) {

@@ -4,22 +4,22 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-public class WlGLSurfaceView extends GLSurfaceView{
+public class WxGLSurfaceView extends GLSurfaceView{
 
-    private WlRender wlRender;
+    private WxRender mWxRender;
 
-    public WlGLSurfaceView(Context context) {
+    public WxGLSurfaceView(Context context) {
         this(context, null);
     }
 
-    public WlGLSurfaceView(Context context, AttributeSet attrs) {
+    public WxGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setEGLContextClientVersion(2);
-        wlRender = new WlRender(context);
-        setRenderer(wlRender);
+        mWxRender = new WxRender(context);
+        setRenderer(mWxRender);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
-        wlRender.setOnRenderListener(new WlRender.OnRenderListener() {
+        mWxRender.setOnRenderListener(new WxRender.OnRenderListener() {
             @Override
             public void onRender() {
                 requestRender();
@@ -29,14 +29,14 @@ public class WlGLSurfaceView extends GLSurfaceView{
 
     public void setYUVData(int width, int height, byte[] y, byte[] u, byte[] v)
     {
-        if(wlRender != null)
+        if(mWxRender != null)
         {
-            wlRender.setYUVRenderData(width, height, y, u, v);
+            mWxRender.setYUVRenderData(width, height, y, u, v);
             requestRender();
         }
     }
 
-    public WlRender getWlRender() {
-        return wlRender;
+    public WxRender getWxRender() {
+        return mWxRender;
     }
 }

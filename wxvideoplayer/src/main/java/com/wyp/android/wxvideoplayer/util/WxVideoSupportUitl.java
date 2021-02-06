@@ -7,7 +7,7 @@ import com.wyp.android.wxvideoplayer.log.MyLog;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WlVideoSupportUitl {
+public class WxVideoSupportUitl {
 
     private static Map<String, String> codecMap = new HashMap<>();
     static {
