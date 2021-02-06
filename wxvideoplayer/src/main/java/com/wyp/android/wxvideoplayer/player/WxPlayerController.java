@@ -472,10 +472,10 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
                 mWxVideoPlayer.exitTinyWindow();
             }
         } else if (v == mRestartPause) {
-            if (mWxVideoPlayer.isPlaying() || mWxVideoPlayer.isBufferingPlaying()) {
+            if (mWxVideoPlayer.isPlaying() ) {
                 MyLog.d("mRestartPause mWxVideoPlayer.isPlaying()");
                 mWxVideoPlayer.pause();
-            } else if (mWxVideoPlayer.isPaused() || mWxVideoPlayer.isBufferingPaused()) {
+            } else if (mWxVideoPlayer.isPaused() ) {
                 MyLog.d("mRestartPause mWxVideoPlayer.isPlaying()");
                 mWxVideoPlayer.restart();
             }

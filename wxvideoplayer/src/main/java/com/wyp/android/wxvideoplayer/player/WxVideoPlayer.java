@@ -258,13 +258,13 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
 
     @Override
     public void restart() {
-       /* if (mCurrentState == STATE_PAUSED) {
-            mMediaPlayer.start();
+        if (mCurrentState == STATE_PAUSED) {
+            mWxPlayer.resume();
             mCurrentState = STATE_PLAYING;
             mController.setControllerState(mPlayerState, mCurrentState);
             LogUtil.d("STATE_PLAYING");
         }
-        if (mCurrentState == STATE_BUFFERING_PAUSED) {
+      /*  if (mCurrentState == STATE_BUFFERING_PAUSED) {
             mMediaPlayer.start();
             mCurrentState = STATE_BUFFERING_PLAYING;
             mController.setControllerState(mPlayerState, mCurrentState);
@@ -280,12 +280,12 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
             mController.setControllerState(mPlayerState, mCurrentState);
             LogUtil.d("STATE_PAUSED");
         }
-        if (mCurrentState == STATE_BUFFERING_PLAYING) {
+       /* if (mCurrentState == STATE_BUFFERING_PLAYING) {
             mWxPlayer.pause();
             mCurrentState = STATE_BUFFERING_PAUSED;
             mController.setControllerState(mPlayerState, mCurrentState);
             LogUtil.d("STATE_BUFFERING_PAUSED");
-        }
+        }*/
     }
 
     @Override
