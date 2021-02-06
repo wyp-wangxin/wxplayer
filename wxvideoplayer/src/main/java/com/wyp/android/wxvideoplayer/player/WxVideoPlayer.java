@@ -65,9 +65,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     private WxPlayerController mController;
     private String mUrl;
     private Map<String, String> mHeaders;
-    //private MediaPlayer mMediaPlayer;
     private WxPlayer mWxPlayer;
-    //private TextureView mTextureView;
     private WxGLSurfaceView mGLSurfaceView;
     private SurfaceTexture mSurfaceTexture;
     private int mBufferPercentage;
@@ -519,22 +517,22 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     }
 
     @Override
-    public void release() {
+    public void stopAndrelease() {
 
-      /*  if (mWxPlayer != null) {
-            mWxPlayer.release();
-            mMediaPlayer = null;
-        }*/
-        mContainer.removeView(mGLSurfaceView);
-        if (mSurfaceTexture != null) {
-            mSurfaceTexture.release();
-            mSurfaceTexture = null;
+        if (mWxPlayer != null) {
+            mWxPlayer.stop();
+            mWxPlayer = null;
+        }
+        if(mGLSurfaceView!=null) {
+            mContainer.removeView(mGLSurfaceView);
+            mGLSurfaceView=null;
         }
         if (mController != null) {
             mController.reset();
         }
         mCurrentState = STATE_IDLE;
         mPlayerState = PLAYER_NORMAL;
+        mController.setControllerState(mPlayerState, mCurrentState);
     }
 
 
@@ -542,6 +540,8 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     private void initMediaPlayer() {
         if (mWxPlayer == null) {
             mWxPlayer = new WxPlayer();
+            String is =(mWxOnCompleteListener==null)?"true":"false";
+            MyLog.d("mWxOnCompleteListener is null ? "+is);
             mWxPlayer.setWxOnCompleteListener(mWxOnCompleteListener);
             mWxPlayer.setWxOnErrorListener(mWxOnErrorListener);
             mWxPlayer.setWxOnLoadListener(mWxOnLoadListener);
@@ -553,6 +553,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
 
     private void initTextureView() {
         if (mGLSurfaceView == null) {
+            MyLog.d("mGLSurfaceView == null ");
             mGLSurfaceView = new WxGLSurfaceView(mContext);
             mWxPlayer.setWxGLSurfaceView(mGLSurfaceView);
         //mTextureView.setSurfaceTextureListener(this);

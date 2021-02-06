@@ -28,7 +28,7 @@ public class WxVideoPlayerManager {
     }
     public void releaseWxVideoPlayer() {
         if (mVideoPlayer != null) {
-            mVideoPlayer.release();
+            mVideoPlayer.stopAndrelease();
             mVideoPlayer = null;
         }
     }
@@ -40,7 +40,7 @@ public class WxVideoPlayerManager {
             } else if (mVideoPlayer.isTinyWindow()) {
                 return mVideoPlayer.exitTinyWindow();
             } else {
-                mVideoPlayer.release();
+                mVideoPlayer.stopAndrelease();
                 return false;
             }
         }

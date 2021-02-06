@@ -145,6 +145,13 @@ public class WxPlayer {
     public void stop()
     {
         wlTimeInfoBean = null;
+        mWxOnParparedListener = null;
+        mWxOnLoadListener = null;
+        wlOnPauseResumeListener = null;
+        mWxOnTimeInfoListener = null;
+        mWxOnErrorListener = null;
+        mWxOnCompleteListener = null;
+        mWxGLSurfaceView = null;
         duration = -1;
         new Thread(new Runnable() {
             @Override

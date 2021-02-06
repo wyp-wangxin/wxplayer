@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.wyp.android.wxvideoplayer.R;
+import com.wyp.android.wxvideoplayer.log.MyLog;
 import com.wyp.android.wxvideoplayer.util.NiceUtil;
 
 import java.util.Timer;
@@ -93,6 +94,7 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
     private static final int MSG_PLAYER_NORMAL=9;
     private static final int MSG_PLAYER_FULL_SCREEN=10;
     private static final int MSG_PLAYER_TINY_WINDOW=11;
+    private static final int MSG_RESET=12;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -167,6 +169,26 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
                     break;
                 case MSG_PLAYER_TINY_WINDOW:
                     mFullScreen.setVisibility(View.GONE);
+                    break;
+                case MSG_RESET:
+                    topBottomVisible = false;
+                    cancelUpdateProgressTimer();
+                    cancelDismissTopBottomTimer();
+                    mSeek.setProgress(0);
+                    mSeek.setSecondaryProgress(0);
+
+                    mCenterStart.setVisibility(View.VISIBLE);
+                    mImage.setVisibility(View.VISIBLE);
+
+                    mBottom.setVisibility(View.GONE);
+                    mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
+
+                    mTop.setVisibility(View.VISIBLE);
+                    mBack.setVisibility(View.GONE);
+
+                    mLoading.setVisibility(View.GONE);
+                    mError.setVisibility(View.GONE);
+                    mCompleted.setVisibility(View.GONE);
                     break;
             }
         }
@@ -428,24 +450,8 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
      * 控制器恢复到初始状态
      */
     public void reset() {
-        topBottomVisible = false;
-        cancelUpdateProgressTimer();
-        cancelDismissTopBottomTimer();
-        mSeek.setProgress(0);
-        mSeek.setSecondaryProgress(0);
+        mHandler.sendEmptyMessage(MSG_RESET);
 
-        mCenterStart.setVisibility(View.VISIBLE);
-        mImage.setVisibility(View.VISIBLE);
-
-        mBottom.setVisibility(View.GONE);
-        mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
-
-        mTop.setVisibility(View.VISIBLE);
-        mBack.setVisibility(View.GONE);
-
-        mLoading.setVisibility(View.GONE);
-        mError.setVisibility(View.GONE);
-        mCompleted.setVisibility(View.GONE);
     }
 //
 //    /**
@@ -456,6 +462,7 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
     public void onClick(View v) {
         if (v == mCenterStart) {
             if (mWxVideoPlayer.isIdle()) {
+                MyLog.d("mCenterStart mWxVideoPlayer.isIdle");
                 mWxVideoPlayer.start();
             }
         } else if (v == mBack) {
@@ -466,8 +473,10 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
             }
         } else if (v == mRestartPause) {
             if (mWxVideoPlayer.isPlaying() || mWxVideoPlayer.isBufferingPlaying()) {
+                MyLog.d("mRestartPause mWxVideoPlayer.isPlaying()");
                 mWxVideoPlayer.pause();
             } else if (mWxVideoPlayer.isPaused() || mWxVideoPlayer.isBufferingPaused()) {
+                MyLog.d("mRestartPause mWxVideoPlayer.isPlaying()");
                 mWxVideoPlayer.restart();
             }
         } else if (v == mFullScreen) {
@@ -477,7 +486,7 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
                 mWxVideoPlayer.exitFullScreen();
             }
         } else if (v == mRetry) {
-            mWxVideoPlayer.release();
+            mWxVideoPlayer.stopAndrelease();
             mWxVideoPlayer.start();
         } else if (v == mReplay) {
             mRetry.performClick();
