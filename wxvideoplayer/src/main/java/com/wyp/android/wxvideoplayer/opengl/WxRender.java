@@ -141,7 +141,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        MyLog.d("onDrawFrame ");
+        //MyLog.d("onDrawFrame ");
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         setMatrix(screen_width,screen_height);
@@ -160,7 +160,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         if(onRenderListener != null)
         {
-            MyLog.d(" onFrameAvailable ");
+            //MyLog.d(" onFrameAvailable ");
             onRenderListener.onRender();
         }
     }
@@ -274,8 +274,8 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         GLES20.glUseProgram(program_mediacodec);
 
 
-        MyLog.d(matrixBuffer.toString());
-        MyLog.d(" dd "+matrixBuffer.get(0));
+        //MyLog.d(matrixBuffer.toString());
+        //MyLog.d(" dd "+matrixBuffer.get(0));
         GLES20.glUniformMatrix4fv(u_matrix, 1, false, matrixBuffer);
 
         GLES20.glEnableVertexAttribArray(avPosition_mediacodec);

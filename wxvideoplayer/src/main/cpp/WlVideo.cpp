@@ -66,10 +66,10 @@ void * playVideo(void *data)
             }
             while(av_bsf_receive_packet(video->abs_ctx, avPacket) == 0)//接收过滤后的AVPacke
             {
-                LOGE("开始解码");
+                //LOGE("开始解码");
 
                 double diff = video->getFrameDiffTime(NULL, avPacket);
-                LOGE("diff is %f", diff);
+                //LOGE("diff is %f", diff);
 
                 av_usleep(video->getDelayTime(diff) * 1000000);
                 video->wlCallJava->onCallDecodeAVPacket(avPacket->size, avPacket->data);
@@ -280,7 +280,7 @@ double WlVideo::getDelayTime(double diff) {
 
     if(diff > 0.003)//差值在3ms之间默认是同步的，不处理
     {//说明音频超前了，
-        LOGD("diff > 0.003");
+        //LOGD("diff > 0.003");
         delayTime = delayTime * 2 / 3; //减小每帧休眠时间
         if(delayTime < defaultDelayTime / 2)//如果减小到小于默认帧休眠时间的一般
         {
@@ -293,7 +293,7 @@ double WlVideo::getDelayTime(double diff) {
     }
     else if(diff < - 0.003)//差值在3ms之间默认是同步的，不处理
     {//说明视屏超前了，
-        LOGD("diff < - 0.003");
+        //LOGD("diff < - 0.003");
         delayTime = delayTime * 3 / 2;//那就增加视屏帧休眠的时间
         if(delayTime < defaultDelayTime / 2)
         {
@@ -311,12 +311,12 @@ double WlVideo::getDelayTime(double diff) {
 	
     if(diff >= 0.5)//如果差值都大于0.5了，就不需要视屏渲染休眠了，让视频赶紧追上音频渲染
     {
-        LOGD("diff >= 0.5");
+        //LOGD("diff >= 0.5");
         delayTime = 0;
     }
     else if(diff <= -0.5)//说明视屏渲染已经大大超前了，
     {
-        LOGD("diff <= -0.5");
+        //LOGD("diff <= -0.5");
         delayTime = defaultDelayTime * 2;
     }
 

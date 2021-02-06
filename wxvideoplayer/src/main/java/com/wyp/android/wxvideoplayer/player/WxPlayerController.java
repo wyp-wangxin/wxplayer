@@ -3,6 +3,8 @@ package com.wyp.android.wxvideoplayer.player;
 
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -79,6 +81,96 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
     private TimerTask mUpdateProgressTimerTask;
 
     private WxVideoPlayer mWxVideoPlayer;
+    private static final  int MSG_STATE_IDLE=0;
+    private static final int MSG_STATE_PREPARING=1;
+    private static final int MSG_STATE_PREPARED =2;
+    private static final int MSG_STATE_PLAYING=3;
+    private static final int MSG_STATE_PAUSED=4;
+    private static final int MSG_STATE_BUFFERING_PLAYING=5;
+    private static final int MSG_STATE_BUFFERING_PAUSED=6;
+    private static final int MSG_STATE_COMPLETED=7;
+    private static final int MSG_STATE_ERROR=8;
+    private static final int MSG_PLAYER_NORMAL=9;
+    private static final int MSG_PLAYER_FULL_SCREEN=10;
+    private static final int MSG_PLAYER_TINY_WINDOW=11;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what){
+                case MSG_STATE_IDLE:
+                    break;
+                case MSG_STATE_PREPARING:
+                    // 只显示准备中动画，其他不显示
+                    mImage.setVisibility(View.GONE);
+                    mLoading.setVisibility(View.VISIBLE);
+                    mLoadText.setText("正在准备...");
+                    mError.setVisibility(View.GONE);
+                    mCompleted.setVisibility(View.GONE);
+                    mTop.setVisibility(View.GONE);
+                    mCenterStart.setVisibility(View.GONE);
+                    break;
+                case MSG_STATE_PREPARED:
+                    startUpdateProgressTimer();
+                    break;
+                case MSG_STATE_PLAYING:
+                    mLoading.setVisibility(View.GONE);
+                    mRestartPause.setImageResource(R.drawable.ic_player_pause);
+                    startDismissTopBottomTimer();
+                    break;
+                case MSG_STATE_PAUSED:
+                    mLoading.setVisibility(View.GONE);
+                    mRestartPause.setImageResource(R.drawable.ic_player_start);
+                    cancelDismissTopBottomTimer();
+                    break;
+                case MSG_STATE_BUFFERING_PLAYING:
+                    mLoading.setVisibility(View.VISIBLE);
+                    mRestartPause.setImageResource(R.drawable.ic_player_pause);
+                    mLoadText.setText("正在缓冲...");
+                    startDismissTopBottomTimer();
+                    break;
+                case MSG_STATE_BUFFERING_PAUSED:
+                    mLoading.setVisibility(View.VISIBLE);
+                    mRestartPause.setImageResource(R.drawable.ic_player_start);
+                    mLoadText.setText("正在缓冲...");
+                    cancelDismissTopBottomTimer();
+                    break;
+                case MSG_STATE_COMPLETED:
+                    cancelUpdateProgressTimer();
+                    setTopBottomVisible(false);
+                    mImage.setVisibility(View.VISIBLE);
+                    mCompleted.setVisibility(View.VISIBLE);
+                    if (mWxVideoPlayer.isFullScreen()) {
+                        mWxVideoPlayer.exitFullScreen();
+                    }
+                    if (mWxVideoPlayer.isTinyWindow()) {
+                        mWxVideoPlayer.exitTinyWindow();
+                    }
+                    break;
+                case MSG_STATE_ERROR:
+                    cancelUpdateProgressTimer();
+                    setTopBottomVisible(false);
+                    mTop.setVisibility(View.VISIBLE);
+                    mError.setVisibility(View.VISIBLE);
+                    break;
+                case MSG_PLAYER_NORMAL:
+                    mBack.setVisibility(View.GONE);
+                    mFullScreen.setVisibility(View.VISIBLE);
+                    mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
+                    break;
+                case MSG_PLAYER_FULL_SCREEN:
+                    mBack.setVisibility(View.VISIBLE);
+                    mFullScreen.setVisibility(View.VISIBLE);
+                    mFullScreen.setImageResource(R.drawable.ic_player_shrink);
+                    break;
+                case MSG_PLAYER_TINY_WINDOW:
+                    mFullScreen.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    };
 
     public WxPlayerController(@NonNull Context context) {
         super(context);
@@ -193,77 +285,43 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
             cancelDismissTopBottomTimer();
         }
     }
-
     public void setControllerState(int playerState, int playState) {
         switch (playerState) {
             case WxVideoPlayer.PLAYER_NORMAL:
-                mBack.setVisibility(View.GONE);
-                mFullScreen.setVisibility(View.VISIBLE);
-                mFullScreen.setImageResource(R.drawable.ic_player_enlarge);
+                mHandler.sendEmptyMessage(MSG_PLAYER_NORMAL);
                 break;
             case WxVideoPlayer.PLAYER_FULL_SCREEN:
-                mBack.setVisibility(View.VISIBLE);
-                mFullScreen.setVisibility(View.VISIBLE);
-                mFullScreen.setImageResource(R.drawable.ic_player_shrink);
+                mHandler.sendEmptyMessage(MSG_PLAYER_FULL_SCREEN);
                 break;
             case WxVideoPlayer.PLAYER_TINY_WINDOW:
-                mFullScreen.setVisibility(View.GONE);
+                mHandler.sendEmptyMessage(MSG_PLAYER_TINY_WINDOW);
                 break;
         }
         switch (playState) {
             case WxVideoPlayer.STATE_IDLE:
                 break;
             case WxVideoPlayer.STATE_PREPARING:
-                // 只显示准备中动画，其他不显示
-                mImage.setVisibility(View.GONE);
-                mLoading.setVisibility(View.VISIBLE);
-                mLoadText.setText("正在准备...");
-                mError.setVisibility(View.GONE);
-                mCompleted.setVisibility(View.GONE);
-                mTop.setVisibility(View.GONE);
-                mCenterStart.setVisibility(View.GONE);
+                mHandler.sendEmptyMessage(MSG_STATE_PREPARING);
                 break;
             case WxVideoPlayer.STATE_PREPARED:
-                startUpdateProgressTimer();
+                mHandler.sendEmptyMessage(MSG_STATE_PREPARED);
                 break;
             case WxVideoPlayer.STATE_PLAYING:
-                mLoading.setVisibility(View.GONE);
-                mRestartPause.setImageResource(R.drawable.ic_player_pause);
-                startDismissTopBottomTimer();
+                mHandler.sendEmptyMessage(MSG_STATE_PLAYING);
                 break;
             case WxVideoPlayer.STATE_PAUSED:
-                mLoading.setVisibility(View.GONE);
-                mRestartPause.setImageResource(R.drawable.ic_player_start);
-                cancelDismissTopBottomTimer();
+                mHandler.sendEmptyMessage(MSG_STATE_PAUSED);
                 break;
             case WxVideoPlayer.STATE_BUFFERING_PLAYING:
-                mLoading.setVisibility(View.VISIBLE);
-                mRestartPause.setImageResource(R.drawable.ic_player_pause);
-                mLoadText.setText("正在缓冲...");
-                startDismissTopBottomTimer();
+                mHandler.sendEmptyMessage(MSG_STATE_BUFFERING_PLAYING);
                 break;
             case WxVideoPlayer.STATE_BUFFERING_PAUSED:
-                mLoading.setVisibility(View.VISIBLE);
-                mRestartPause.setImageResource(R.drawable.ic_player_start);
-                mLoadText.setText("正在缓冲...");
-                cancelDismissTopBottomTimer();
+                mHandler.sendEmptyMessage(MSG_STATE_BUFFERING_PAUSED);
             case WxVideoPlayer.STATE_COMPLETED:
-                cancelUpdateProgressTimer();
-                setTopBottomVisible(false);
-                mImage.setVisibility(View.VISIBLE);
-                mCompleted.setVisibility(View.VISIBLE);
-                if (mWxVideoPlayer.isFullScreen()) {
-                    mWxVideoPlayer.exitFullScreen();
-                }
-                if (mWxVideoPlayer.isTinyWindow()) {
-                    mWxVideoPlayer.exitTinyWindow();
-                }
+                mHandler.sendEmptyMessage(MSG_STATE_COMPLETED);
                 break;
             case WxVideoPlayer.STATE_ERROR:
-                cancelUpdateProgressTimer();
-                setTopBottomVisible(false);
-                mTop.setVisibility(View.VISIBLE);
-                mError.setVisibility(View.VISIBLE);
+                mHandler.sendEmptyMessage(MSG_STATE_ERROR);
                 break;
         }
     }

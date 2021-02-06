@@ -24,6 +24,7 @@ import com.wyp.android.wxvideoplayer.listener.WxOnParparedListener;
 import com.wyp.android.wxvideoplayer.listener.WxOnPauseResumeListener;
 import com.wyp.android.wxvideoplayer.listener.WxOnTimeInfoListener;
 import com.wyp.android.wxvideoplayer.log.MyLog;
+import com.wyp.android.wxvideoplayer.opengl.WxGLSurfaceView;
 import com.wyp.android.wxvideoplayer.util.LogUtil;
 import com.wyp.android.wxvideoplayer.util.NiceUtil;
 
@@ -34,7 +35,7 @@ import java.util.Map;
  * Created by wyp on 2021/2/3.
  */
 
-public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,TextureView.SurfaceTextureListener{
+public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
 
     public static final int STATE_ERROR = -1;          // 播放错误
     public static final int STATE_IDLE = 0;            // 播放未开始
@@ -66,10 +67,11 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
     private Map<String, String> mHeaders;
     //private MediaPlayer mMediaPlayer;
     private WxPlayer mWxPlayer;
-    private TextureView mTextureView;
+    //private TextureView mTextureView;
+    private WxGLSurfaceView mGLSurfaceView;
     private SurfaceTexture mSurfaceTexture;
     private int mBufferPercentage;
-    /*private MediaPlayer.OnPreparedListener mOnPreparedListener
+   private MediaPlayer.OnPreparedListener mOnPreparedListener
             = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
@@ -154,7 +156,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
             mBufferPercentage = percent;
         }
-    };*/
+    };
     private WxOnCompleteListener mWxOnCompleteListener =new WxOnCompleteListener() {
         @Override
         public void onComplete() {
@@ -180,7 +182,11 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
         @Override
         public void onParpared() {
             MyLog.d("准备好了，可以开始播放视频了");
+            mCurrentState = STATE_PREPARED;
+            mController.setControllerState(mPlayerState, mCurrentState);
             mWxPlayer.start();
+            mCurrentState = STATE_PLAYING;
+            mController.setControllerState(mPlayerState, mCurrentState);
         }
     };
 
@@ -240,6 +246,10 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
             initMediaPlayer();
             initTextureView();
             addTextureView();
+            mWxPlayer.setSource(mUrl);
+            mWxPlayer.parpared();
+            mCurrentState = STATE_PREPARING;
+            mController.setControllerState(mPlayerState, mCurrentState);
         }
     }
 
@@ -250,7 +260,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
 
     @Override
     public void restart() {
-        if (mCurrentState == STATE_PAUSED) {
+       /* if (mCurrentState == STATE_PAUSED) {
             mMediaPlayer.start();
             mCurrentState = STATE_PLAYING;
             mController.setControllerState(mPlayerState, mCurrentState);
@@ -261,19 +271,19 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
             mCurrentState = STATE_BUFFERING_PLAYING;
             mController.setControllerState(mPlayerState, mCurrentState);
             LogUtil.d("STATE_BUFFERING_PLAYING");
-        }
+        }*/
     }
 
     @Override
     public void pause() {
         if (mCurrentState == STATE_PLAYING) {
-            mMediaPlayer.pause();
+            mWxPlayer.pause();
             mCurrentState = STATE_PAUSED;
             mController.setControllerState(mPlayerState, mCurrentState);
             LogUtil.d("STATE_PAUSED");
         }
         if (mCurrentState == STATE_BUFFERING_PLAYING) {
-            mMediaPlayer.pause();
+            mWxPlayer.pause();
             mCurrentState = STATE_BUFFERING_PAUSED;
             mController.setControllerState(mPlayerState, mCurrentState);
             LogUtil.d("STATE_BUFFERING_PAUSED");
@@ -282,9 +292,9 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
 
     @Override
     public void seekTo(int pos) {
-        if (mMediaPlayer != null) {
+       /* if (mMediaPlayer != null) {
             mMediaPlayer.seekTo(pos);
-        }
+        }*/
     }
 
     @Override
@@ -374,12 +384,12 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
 
     @Override
     public int getDuration() {
-        return mMediaPlayer != null ? mMediaPlayer.getDuration() : 0;
+        return 0;//mMediaPlayer != null ? mMediaPlayer.getDuration() : 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
+        return 0;//mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
     }
 
     @Override
@@ -511,11 +521,11 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
     @Override
     public void release() {
 
-        if (mMediaPlayer != null) {
-            mMediaPlayer.release();
+      /*  if (mWxPlayer != null) {
+            mWxPlayer.release();
             mMediaPlayer = null;
-        }
-        mContainer.removeView(mTextureView);
+        }*/
+        mContainer.removeView(mGLSurfaceView);
         if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
             mSurfaceTexture = null;
@@ -542,21 +552,22 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
     }
 
     private void initTextureView() {
-        if (mTextureView == null) {
-            mTextureView = new TextureView(mContext);
-            mTextureView.setSurfaceTextureListener(this);
+        if (mGLSurfaceView == null) {
+            mGLSurfaceView = new WxGLSurfaceView(mContext);
+            mWxPlayer.setWxGLSurfaceView(mGLSurfaceView);
+        //mTextureView.setSurfaceTextureListener(this);
         }
     }
 
     private void addTextureView() {
-        mContainer.removeView(mTextureView);
+        mContainer.removeView(mGLSurfaceView);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        mContainer.addView(mTextureView, 0, params);
+        mContainer.addView(mGLSurfaceView, 0, params);
     }
 
-    private void openMediaPlayer() {
+   /* private void openMediaPlayer() {
         try {
             mMediaPlayer.setDataSource(mContext.getApplicationContext(), Uri.parse(mUrl), mHeaders);
             mMediaPlayer.setSurface(new Surface(mSurfaceTexture));
@@ -593,5 +604,5 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
 
-    }
+    }*/
 }

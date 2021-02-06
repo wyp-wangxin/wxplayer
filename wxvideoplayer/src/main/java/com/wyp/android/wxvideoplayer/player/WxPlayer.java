@@ -332,7 +332,7 @@ public class WxPlayer {
     {
         if(surface != null && datasize > 0 && data != null && mediaCodec != null)
         {
-            MyLog.d("JAVA decodeAVPacket 被调用！");
+            //MyLog.d("JAVA decodeAVPacket 被调用！");
             try
             {
                 int intputBufferIndex = mediaCodec.dequeueInputBuffer(10);
