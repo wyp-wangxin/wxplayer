@@ -87,7 +87,7 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
     }
 
     private void init() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.tx_video_palyer_controller, WxPlayerController.this, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.tx_video_palyer_controller, WxPlayerController.this, true);
 
         mCenterStart =  view.findViewById(R.id.center_start);
         mImage = (ImageView) view.findViewById(R.id.image);
