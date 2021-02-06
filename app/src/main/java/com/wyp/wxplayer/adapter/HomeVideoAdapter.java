@@ -1,6 +1,8 @@
 package com.wyp.wxplayer.adapter;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,19 +67,26 @@ public class HomeVideoAdapter extends RecyclerView.Adapter<HomeVideoAdapter.MyVi
             super(itemView);
             mContext = itemView.getContext();
             mVideoPlayer = (WxVideoPlayer) itemView.findViewById(R.id.nice_video_player);
+
+            // 将列表中的每个视频设置为默认16:9的比例
+            ViewGroup.LayoutParams params = mVideoPlayer.getLayoutParams();
+            params.width = itemView.getResources().getDisplayMetrics().widthPixels; // 宽度为屏幕宽度
+            params.height = (int) (params.width * 9f / 16f);    // 高度为宽度的9/16
+            mVideoPlayer.setLayoutParams(params);
         }
 
         public void setController(WxPlayerController controller) {
             mController = controller;
-            //mVideoPlayer.setController(mController);
+            mVideoPlayer.setController(mController);
         }
 
         public void bindData(Video video) {
             mController.setTitle(video.getTitle());
             mController.setImage(video.getImageUrl());
-            mVideoPlayer.setController(mController);
             mVideoPlayer.setUp(video.getVideoUrl(), null);
+
         }
+
     }
 
 }
