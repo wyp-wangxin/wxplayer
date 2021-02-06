@@ -69,6 +69,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     private WxGLSurfaceView mGLSurfaceView;
     private SurfaceTexture mSurfaceTexture;
     private int mBufferPercentage;
+    private WlTimeInfoBean mWlTimeInfoBean;
    private MediaPlayer.OnPreparedListener mOnPreparedListener
             = new MediaPlayer.OnPreparedListener() {
         @Override
@@ -198,7 +199,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     private WxOnTimeInfoListener mWxOnTimeInfoListener = new WxOnTimeInfoListener() {
         @Override
         public void onTimeInfo(WlTimeInfoBean timeInfoBean) {
-
+            mWlTimeInfoBean=timeInfoBean;
         }
     };
 
@@ -382,16 +383,21 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
 
     @Override
     public int getDuration() {
-        return 0;//mMediaPlayer != null ? mMediaPlayer.getDuration() : 0;
+        if(mWlTimeInfoBean==null)
+            return 0;
+        return mWlTimeInfoBean.getTotalTime();//mMediaPlayer != null ? mMediaPlayer.getDuration() : 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        return 0;//mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
+        if(mWlTimeInfoBean==null)
+            return 0;
+        return mWlTimeInfoBean.getCurrentTime();//mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : 0;
     }
 
     @Override
     public int getBufferPercentage() {
+
         return mBufferPercentage;
     }
 

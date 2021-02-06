@@ -115,6 +115,7 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
                     mCenterStart.setVisibility(View.GONE);
                     break;
                 case MSG_STATE_PREPARED:
+                    MyLog.d("case MSG_STATE_PREPARED: ");
                     startUpdateProgressTimer();
                     break;
                 case MSG_STATE_PLAYING:
@@ -373,12 +374,12 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
     private void updateProgress() {
         int position = mWxVideoPlayer.getCurrentPosition();
         int duration = mWxVideoPlayer.getDuration();
-        int bufferPercentage = mWxVideoPlayer.getBufferPercentage();
-        mSeek.setSecondaryProgress(bufferPercentage);
+        //int bufferPercentage = mWxVideoPlayer.getBufferPercentage();
+        //mSeek.setSecondaryProgress(bufferPercentage);
         int progress = (int) (100f * position / duration);
         mSeek.setProgress(progress);
-        mPosition.setText(NiceUtil.formatTime(position));
-        mDuration.setText(NiceUtil.formatTime(duration));
+        mPosition.setText(NiceUtil.formatTime(position*1000));
+        mDuration.setText(NiceUtil.formatTime(duration*1000));
     }
 
     /**
@@ -481,7 +482,9 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
             }
         } else if (v == mFullScreen) {
             if (mWxVideoPlayer.isNormal()) {
-                mWxVideoPlayer.enterFullScreen();
+                // 隐藏ActionBar、状态栏，并横屏
+                NiceUtil.hideActionBar(mContext);
+                //mWxVideoPlayer.enterFullScreen();
             } else if (mWxVideoPlayer.isFullScreen()) {
                 mWxVideoPlayer.exitFullScreen();
             }
