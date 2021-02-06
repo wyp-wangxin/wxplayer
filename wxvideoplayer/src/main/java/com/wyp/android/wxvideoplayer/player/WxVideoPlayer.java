@@ -86,7 +86,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
             mCurrentState = STATE_COMPLETED;
             mController.setControllerState(mPlayerState, mCurrentState);
             LogUtil.d("onCompletion ——> STATE_COMPLETED");
-            WxVideoPlayerManager.instance().setCurrentNiceVideoPlayer(null);
+            WxVideoPlayerManager.instance().setCurrentWxVideoPlayer(null);
         }
     };
 
@@ -182,8 +182,8 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer ,Textur
 
     @Override
     public void start() {
-        WxVideoPlayerManager.instance().releaseNiceVideoPlayer();
-        WxVideoPlayerManager.instance().setCurrentNiceVideoPlayer(this);
+        WxVideoPlayerManager.instance().releaseWxVideoPlayer();
+        WxVideoPlayerManager.instance().setCurrentWxVideoPlayer(this);
         if (mCurrentState == STATE_IDLE
                 || mCurrentState == STATE_ERROR
                 || mCurrentState == STATE_COMPLETED) {

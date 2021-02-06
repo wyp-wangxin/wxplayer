@@ -20,11 +20,13 @@ public class WxVideoPlayerManager {
         return sInstance;
     }
 
-    public void setCurrentNiceVideoPlayer(WxVideoPlayer videoPlayer) {
+    public void setCurrentWxVideoPlayer(WxVideoPlayer videoPlayer) {
         mVideoPlayer = videoPlayer;
     }
-
-    public void releaseNiceVideoPlayer() {
+    public WxVideoPlayer getCurrentWxVideoPlayer() {
+        return mVideoPlayer;
+    }
+    public void releaseWxVideoPlayer() {
         if (mVideoPlayer != null) {
             mVideoPlayer.release();
             mVideoPlayer = null;

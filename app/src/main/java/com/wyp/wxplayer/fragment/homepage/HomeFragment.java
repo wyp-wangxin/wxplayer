@@ -1,16 +1,14 @@
 package com.wyp.wxplayer.fragment.homepage;
 
-import android.os.Bundle;
+
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
+
+import com.wyp.android.wxvideoplayer.player.WxVideoPlayer;
+import com.wyp.android.wxvideoplayer.player.WxVideoPlayerManager;
 import com.wyp.wxplayer.R;
-import com.wyp.wxplayer.adapter.HomeAdapter;
 import com.wyp.wxplayer.adapter.HomeVideoAdapter;
 import com.wyp.wxplayer.bean.VideoBean;
 import com.wyp.wxplayer.fragment.BaseFragment;
@@ -21,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
+
 
 /**
  * Created by wyp on 2021/1/31.
@@ -66,7 +64,10 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
         mRecylerview.setRecyclerListener(new RecyclerView.RecyclerListener() {
             @Override
             public void onViewRecycled(RecyclerView.ViewHolder holder) {
-
+                WxVideoPlayer VideoPlayer = ((HomeVideoAdapter.MyViewHolder) holder).mVideoPlayer;
+                if (VideoPlayer == WxVideoPlayerManager.instance().getCurrentWxVideoPlayer()) {
+                    WxVideoPlayerManager.instance().releaseWxVideoPlayer();
+                }
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(new MyOnRefreshListener());
