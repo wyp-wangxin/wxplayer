@@ -16,6 +16,8 @@ import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+
+import com.wyp.android.wxvideoplayer.R;
 import com.wyp.android.wxvideoplayer.WlTimeInfoBean;
 import com.wyp.android.wxvideoplayer.listener.WxOnCompleteListener;
 import com.wyp.android.wxvideoplayer.listener.WxOnErrorListener;
@@ -422,17 +424,23 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
         if (mPlayerState == PLAYER_FULL_SCREEN) return;
 
         // 隐藏ActionBar、状态栏，并横屏
-        NiceUtil.hideActionBar(mContext);
-        NiceUtil.scanForActivity(mContext)
-                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        this.removeView(mContainer);
-        ViewGroup contentView = (ViewGroup) NiceUtil.scanForActivity(mContext)
-                .findViewById(android.R.id.content);
+        NiceUtil.scanForActivity(mContext)
+               .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        NiceUtil.hideActionBar(mContext);
+        //this.removeView(mContainer);
+        //ViewGroup contentView = (ViewGroup) NiceUtil.scanForActivity(mContext)
+                //.findViewById(android.R.id.content);
+
+        ViewGroup viewGroup = (ViewGroup)  this.getParent().getParent().getParent().getParent();
+        viewGroup.removeAllViews();
+        //viewGroup.removeView(this);
+       // this.removeView(R.id.);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        contentView.addView(mContainer, params);
+        viewGroup.addView(this, params);
+      //  addTextureView();
 
         mPlayerState = PLAYER_FULL_SCREEN;
         mController.setControllerState(mPlayerState, mCurrentState);

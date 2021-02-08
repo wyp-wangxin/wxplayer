@@ -1,6 +1,7 @@
 package com.wyp.wxplayer.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     private SparseArray<Fragment> mSparseArray;
-
+    BottomBar bottomBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mSparseArray.append(R.id.bottombar_yuedan, TestFragment.newInstance("悦单"));
 
         // 处理底部栏
-        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);//ctrl+alt+v :快捷键生成变量名
+         bottomBar = BottomBar.attach(this, savedInstanceState);//ctrl+alt+v :快捷键生成变量名
         bottomBar.setItemsFromMenu(R.menu.bottombar, new OnMainMenuTabClickListener());//OnMainMenuTabClickListener Refactor提取为内部类
     }
 
@@ -104,5 +105,15 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.container,fragment);
 
         transaction.commit();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation== Configuration.ORIENTATION_LANDSCAPE){
+           bottomBar.hide();
+        }else if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+            bottomBar.show();
+        }
     }
 }

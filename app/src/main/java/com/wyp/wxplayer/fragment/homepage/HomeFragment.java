@@ -1,11 +1,14 @@
 package com.wyp.wxplayer.fragment.homepage;
 
 
+import android.content.res.Configuration;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
 
 
+import com.wyp.android.wxvideoplayer.log.MyLog;
 import com.wyp.android.wxvideoplayer.player.WxVideoPlayer;
 import com.wyp.android.wxvideoplayer.player.WxVideoPlayerManager;
 import com.wyp.wxplayer.R;
@@ -78,6 +81,29 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
         return R.layout.fragment_home;
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(newConfig.orientation== Configuration.ORIENTATION_LANDSCAPE){
+            //bottomBar.hide();
+          /*  MyLog.d("onConfigurationChanged ffffffffffffffffffff");
+            ViewGroup viewGroup = (ViewGroup)  WxVideoPlayerManager.instance().getCurrentWxVideoPlayer().getParent().getParent().getParent();
+            if (viewGroup == null)
+                return;
+           // hideActionBar();
+            viewGroup.removeAllViews();
+            ViewGroup viewGroup2 = (ViewGroup)  WxVideoPlayerManager.instance().getCurrentWxVideoPlayer().getParent().getParent();*/
+
+
+        }else if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+            //bottomBar.show();
+        }
+
+
+
+    }
 
     @Override
     public void setData(List<VideoBean> videoBeen) {

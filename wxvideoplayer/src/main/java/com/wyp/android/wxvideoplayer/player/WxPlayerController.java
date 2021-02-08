@@ -457,7 +457,7 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
 //
 //    /**
 //     * 尽量不要在onClick中直接处理控件的隐藏、显示及各种UI逻辑。
-//     * UI相关的逻辑都尽量到{@link #onPlayStateChanged}和{@link #onPlayModeChanged}中处理.
+//     * UI相关的逻辑都尽量到{@link #onPlayStateChanged}和{@link #onPla1yModeChanged}中处理.
 //     */
     @Override
     public void onClick(View v) {
@@ -483,8 +483,8 @@ public class WxPlayerController extends FrameLayout implements View.OnTouchListe
         } else if (v == mFullScreen) {
             if (mWxVideoPlayer.isNormal()) {
                 // 隐藏ActionBar、状态栏，并横屏
-                NiceUtil.hideActionBar(mContext);
-                //mWxVideoPlayer.enterFullScreen();
+                //NiceUtil.hideActionBar(mContext);
+                mWxVideoPlayer.enterFullScreen();
             } else if (mWxVideoPlayer.isFullScreen()) {
                 mWxVideoPlayer.exitFullScreen();
             }
