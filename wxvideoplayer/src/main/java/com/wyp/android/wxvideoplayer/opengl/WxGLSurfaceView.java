@@ -4,6 +4,8 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import com.wyp.android.wxvideoplayer.log.MyLog;
+
 public class WxGLSurfaceView extends GLSurfaceView{
 
     private WxRender mWxRender;
@@ -22,6 +24,7 @@ public class WxGLSurfaceView extends GLSurfaceView{
         mWxRender.setOnRenderListener(new WxRender.OnRenderListener() {
             @Override
             public void onRender() {
+                MyLog.d("wwxx onRender setOnRenderListener");
                 requestRender();
             }
         });
@@ -38,5 +41,10 @@ public class WxGLSurfaceView extends GLSurfaceView{
 
     public WxRender getWxRender() {
         return mWxRender;
+    }
+    public void relese(){
+        mWxRender.destroy_glyuv();
+        mWxRender.destroy_glmediacodec();
+
     }
 }

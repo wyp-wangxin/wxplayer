@@ -424,23 +424,18 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
         if (mPlayerState == PLAYER_FULL_SCREEN) return;
 
         // 隐藏ActionBar、状态栏，并横屏
-
         NiceUtil.scanForActivity(mContext)
                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         NiceUtil.hideActionBar(mContext);
-        //this.removeView(mContainer);
-        //ViewGroup contentView = (ViewGroup) NiceUtil.scanForActivity(mContext)
-                //.findViewById(android.R.id.content);
 
+        this.removeView(mContainer);
         ViewGroup viewGroup = (ViewGroup)  this.getParent().getParent().getParent().getParent();
         viewGroup.removeAllViews();
-        //viewGroup.removeView(this);
-       // this.removeView(R.id.);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        viewGroup.addView(this, params);
-      //  addTextureView();
+        viewGroup.addView(mContainer, params);
+
 
         mPlayerState = PLAYER_FULL_SCREEN;
         mController.setControllerState(mPlayerState, mCurrentState);

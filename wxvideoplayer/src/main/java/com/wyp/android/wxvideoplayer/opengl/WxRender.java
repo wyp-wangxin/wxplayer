@@ -13,6 +13,7 @@ import com.wyp.android.wxvideoplayer.log.MyLog;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -56,6 +57,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     private int sampler_u;
     private int sampler_v;
     private int[] textureId_yuv;
+    private int[] textureids;
 
     private int width_yuv;
     private int height_yuv;
@@ -83,7 +85,8 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
 
     private OnSurfaceCreateListener onSurfaceCreateListener;
     private OnRenderListener onRenderListener;
-
+    private boolean INIT_YUV =false;
+    private boolean INT_MEIDIA =false;
     public WxRender(Context context)
     {
         this.context = context;
@@ -124,6 +127,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         MyLog.d("onSurfaceCreated 被调用 ！");
+
         initRenderYUV();
         initRenderMediacodec();
     }
@@ -190,6 +194,20 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
         }
+
+        INIT_YUV = true;
+    }
+
+    public void destroy_glyuv(){
+        IntBuffer ib = ByteBuffer.allocateDirect(textureId_yuv.length * 4)
+                .order(ByteOrder.nativeOrder()).asIntBuffer().put(textureId_yuv);
+        ib.position(0);
+        GLES20.glDeleteTextures(3, ib);
+        GLES20.glDetachShader(program_yuv, avPosition_yuv);
+        GLES20.glDetachShader(program_yuv, afPosition_yuv);
+        GLES20.glDeleteShader(avPosition_yuv);
+        GLES20.glDeleteShader(afPosition_yuv);
+        GLES20.glDeleteProgram(program_yuv);
     }
 
     public void setYUVRenderData(int width, int height, byte[] y, byte[] u, byte[] v)
@@ -205,6 +223,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     {
         if(width_yuv > 0 && height_yuv > 0 && y != null && u != null && v != null)
         {
+            MyLog.d("renderYUV!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             GLES20.glUseProgram(program_yuv);
 
             GLES20.glEnableVertexAttribArray(avPosition_yuv);
@@ -238,6 +257,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         }
     }
 
+
     private void initRenderMediacodec()
     {
         String vertexSource = WxShaderUtil.readRawTxt(context, R.raw.vertex_shader);
@@ -249,7 +269,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         samplerOES_mediacodec = GLES20.glGetUniformLocation(program_mediacodec, "sTexture");
         u_matrix = GLES20.glGetUniformLocation(program_mediacodec, "u_Matrix");
 
-        int[] textureids = new int[1];
+         textureids = new int[1];
         GLES20.glGenTextures(1, textureids, 0);
         textureId_mediacodec = textureids[0];
 
@@ -268,8 +288,25 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         }
     }
 
+    public void destroy_glmediacodec(){
+        IntBuffer ib = ByteBuffer.allocateDirect(textureids.length * 4)
+                .order(ByteOrder.nativeOrder()).asIntBuffer().put(textureids);
+        ib.position(0);
+        GLES20.glDeleteTextures(1, ib);
+        GLES20.glDetachShader(program_mediacodec, avPosition_mediacodec);
+        GLES20.glDetachShader(program_mediacodec, afPosition_mediacodec);
+        GLES20.glDetachShader(program_mediacodec, samplerOES_mediacodec);
+        GLES20.glDetachShader(program_mediacodec, u_matrix);
+        GLES20.glDeleteShader(avPosition_mediacodec);
+        GLES20.glDeleteShader(afPosition_mediacodec);
+        GLES20.glDeleteShader(samplerOES_mediacodec);
+        GLES20.glDeleteProgram(program_mediacodec);
+        GLES20.glDeleteProgram(u_matrix);
+    }
+
     private void renderMediacodec()
     {
+        MyLog.d("renderMediacodec !!!!!!!!!!!!!!!!!!!!!DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         surfaceTexture.updateTexImage();
         GLES20.glUseProgram(program_mediacodec);
 
@@ -287,6 +324,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId_mediacodec);
         GLES20.glUniform1i(samplerOES_mediacodec, 0);
+        INT_MEIDIA=true;
     }
 
 
