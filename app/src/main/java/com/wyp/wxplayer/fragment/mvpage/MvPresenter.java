@@ -20,7 +20,7 @@ public class MvPresenter implements MvMvp.Presener {
     }
 
     @Override
-    public void loadData() {
+    public void loadData(String area, int offset, int size) {
         String url = URLProviderUtil.getMVareaUrl();
 
         HttpManager.getInstance().get(url, new BaseCallBack<List<AreaBean>>() {
