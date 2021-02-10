@@ -422,7 +422,7 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     @Override
     public void enterFullScreen() {
         if (mPlayerState == PLAYER_FULL_SCREEN) return;
-
+        //mGLSurfaceView.p
         // 隐藏ActionBar、状态栏，并横屏
         NiceUtil.scanForActivity(mContext)
                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -615,4 +615,12 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
 
     }*/
+
+   public void pauseGLSurfaceView(){
+       mGLSurfaceView.onPause();
+   }
+
+   public void resumeGLSurfaceView(){
+       mGLSurfaceView.onResume();
+   }
 }

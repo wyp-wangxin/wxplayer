@@ -133,4 +133,26 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
             isRefresh = true;
         }
     }
+
+    @Override
+    public void onResume() {
+
+        MyLog.d("hhhhhhh onResume ????");
+        WxVideoPlayer VideoPlayer = WxVideoPlayerManager.instance().getCurrentWxVideoPlayer();
+       if(VideoPlayer!=null)
+           VideoPlayer.resumeGLSurfaceView();
+
+        super.onResume();
+
+
+    }
+
+    @Override
+    public void onPause() {
+        MyLog.d("hhhhhhh onPause ????");
+        WxVideoPlayer VideoPlayer = WxVideoPlayerManager.instance().getCurrentWxVideoPlayer();
+        if(VideoPlayer!=null)
+            VideoPlayer.pauseGLSurfaceView();
+        super.onPause();
+    }
 }

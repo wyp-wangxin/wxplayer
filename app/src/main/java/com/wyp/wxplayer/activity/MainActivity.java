@@ -116,4 +116,17 @@ public class MainActivity extends AppCompatActivity {
             bottomBar.show();
         }
     }
+
+
+    @Override
+    protected void onPause() {
+
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

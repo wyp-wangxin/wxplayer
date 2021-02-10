@@ -47,4 +47,14 @@ public class WxGLSurfaceView extends GLSurfaceView{
         mWxRender.destroy_glmediacodec();
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }
