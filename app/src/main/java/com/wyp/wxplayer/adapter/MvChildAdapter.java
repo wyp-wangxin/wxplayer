@@ -1,5 +1,6 @@
 package com.wyp.wxplayer.adapter;
 
+import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.wyp.wxplayer.R;
+import com.wyp.wxplayer.Util;
 import com.wyp.wxplayer.bean.VideoBean;
 
 import java.util.List;
@@ -70,7 +72,14 @@ public class MvChildAdapter extends RecyclerView.Adapter<MvChildAdapter.MyViewHo
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            Point point = Util.computeImgSize(240,135,itemView.getContext());
+            mIvPostimg.getLayoutParams().width = point.x;
+            mIvPostimg.getLayoutParams().height = point.y;
+            mIvPostimg.requestLayout();
 
+            mViewbgs.getLayoutParams().width = point.x;
+            mViewbgs.getLayoutParams().height = point.y;
+            mViewbgs.requestLayout();
         }
     }
 
