@@ -32,9 +32,13 @@ public class MvChildFragment extends BaseFragment implements MvChildMvp.View {
     @Bind(R.id.refresh)
     SwipeRefreshLayout mRefresh;
 
+    private String code;
     private MvChildMvp.Presenter presenter;
     private List<VideoBean> videoList;
     private MvChildAdapter mMvChildAdapter;
+    private boolean isRefresh;
+    private boolean hasMore = true;
+
     public static MvChildFragment newInstance(String code){
         Bundle args = new Bundle();
         args.putString("code",code);
@@ -62,6 +66,10 @@ public class MvChildFragment extends BaseFragment implements MvChildMvp.View {
         mMvChildAdapter = new MvChildAdapter(videoList);
         mRecylerview.setAdapter(mMvChildAdapter);
 
+        // 下拉刷新监听
+        mRefresh.setOnRefreshListener(new OnMvRefreshListener());
+
+        mRecylerview.addOnScrollListener(new OnMvScrollListener());//上滑刷新
     }
 
 
@@ -72,6 +80,17 @@ public class MvChildFragment extends BaseFragment implements MvChildMvp.View {
 
     @Override
     public void setData(List<VideoBean> videos) {
+
+        if (isRefresh){
+            videoList.clear();
+            isRefresh = false;
+            mRefresh.setRefreshing(false);// 隐藏刷新提示
+        }
+
+        // 计算下一次加载数据的起始位置
+        offset += videos.size();
+        hasMore = videos.size() >= SIZE;
+
         videoList.addAll(videos);
         mMvChildAdapter.notifyDataSetChanged();
     }
@@ -79,5 +98,28 @@ public class MvChildFragment extends BaseFragment implements MvChildMvp.View {
     @Override
     public void onError(int code, Exception e) {
         Toast.makeText(getContext(), "MvChildFragment 错误码为："+code, Toast.LENGTH_SHORT).show();
+    }
+
+    private class OnMvRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            isRefresh = true;
+            offset = 0;
+            presenter.loadData(code,offset,SIZE);
+        }
+    }
+
+    private class OnMvScrollListener extends RecyclerView.OnScrollListener {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            // 获取当前可见的最后一个条目位置
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecylerview.getLayoutManager();
+            int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+
+            // 当用户松手时发现已经是在最后一项，则获取下一页数据
+            if (newState== 0&& lastVisibleItemPosition == videoList.size()-1 && hasMore){
+                presenter.loadData(code,offset,SIZE);
+            }
+        }
     }
 }
