@@ -100,11 +100,20 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
             viewbg.getLayoutParams().width = point.x;
             viewbg.getLayoutParams().height = point.y;
             viewbg.requestLayout();
+            // 注册点击监听
+            itemView.setOnClickListener(new MyOnClickListener());
         }
 
         public void setController(WxPlayerController controller) {
             mController = controller;
             //mVideoPlayer.setController(mController);
+        }
+
+        private class MyOnClickListener implements View.OnClickListener {
+            @Override
+            public void onClick(View view) {
+
+            }
         }
     }
 
