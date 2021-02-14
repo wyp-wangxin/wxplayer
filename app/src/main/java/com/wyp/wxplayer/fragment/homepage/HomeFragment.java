@@ -50,7 +50,7 @@ public class HomeFragment extends BaseFragment implements HomeMvp.View {
         // 创建 presenter
         mPresenter = new HomePresenter(this);
         mPresenter.loadData(0, 10);
-
+        MyLog.d("HomeFragmentHomeFragment ");
         // 填充 RecylerView 列表。 RecylerView,的基础用法
         // 布局管理器
         LinearLayoutManager layout = new LinearLayoutManager(getContext());//RecylerView 列表

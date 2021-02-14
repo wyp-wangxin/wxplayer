@@ -16,6 +16,7 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 import com.wyp.wxplayer.R;
 import com.wyp.wxplayer.fragment.homepage.HomeFragment;
 import com.wyp.wxplayer.fragment.TestFragment;
+import com.wyp.wxplayer.fragment.localpage.LocalFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         mSparseArray = new SparseArray<>();//ctrl+alt+F : 换成成员变量
 
         mSparseArray.append(R.id.bottombar_home, new HomeFragment());//Ctrl + D :在下面复制当前行
-        mSparseArray.append(R.id.bottombar_mv, TestFragment.newInstance("MV"));
+        mSparseArray.append(R.id.bottombar_mv, new LocalFragment());
         mSparseArray.append(R.id.bottombar_vbang, TestFragment.newInstance("V榜"));
         mSparseArray.append(R.id.bottombar_yuedan, TestFragment.newInstance("悦单"));
 

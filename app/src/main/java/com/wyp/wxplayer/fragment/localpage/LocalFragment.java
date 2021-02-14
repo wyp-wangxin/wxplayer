@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wyp.android.wxvideoplayer.log.MyLog;
 import com.wyp.android.wxvideoplayer.player.WxVideoPlayer;
 import com.wyp.android.wxvideoplayer.player.WxVideoPlayerManager;
 import com.wyp.wxplayer.R;
@@ -39,13 +40,14 @@ public class LocalFragment extends BaseFragment implements LocalMvp.View{
 
     private List<LocalVideoBean> mLocalVideoBeans;
 
-    private LocalVideoAdapter mLocalVideoAdapter;
+    private LocalVideoAdapter mLocalVideoAdapter ;
     private LocalPresenter mPresenter;
     @Override
     protected void initVeiw() {
+        MyLog.d(" 设置 Adapter initVeiwinitVeiwinitVeiwinitVeiw");
         // 创建 presenter
-        mPresenter = new LocalPresenter(this);
-        mPresenter.loadData();
+        mPresenter = new LocalPresenter(getContext(),this);
+
 
         // 布局管理器
         LinearLayoutManager layout = new LinearLayoutManager(getContext());//RecylerView 列表
@@ -53,10 +55,12 @@ public class LocalFragment extends BaseFragment implements LocalMvp.View{
         mRecylerview.setLayoutManager(layout);
 
         // 设置 Adapter
+
         mLocalVideoBeans = new ArrayList<>();
         mLocalVideoAdapter = new LocalVideoAdapter(getContext(),mLocalVideoBeans);
         mRecylerview.setHasFixedSize(true);
         mRecylerview.setAdapter(mLocalVideoAdapter);
+        mPresenter.loadData();
         mRecylerview.setRecyclerListener(new RecyclerView.RecyclerListener() {
             @Override
             public void onViewRecycled(RecyclerView.ViewHolder holder) {
@@ -74,7 +78,9 @@ public class LocalFragment extends BaseFragment implements LocalMvp.View{
 
     @Override
     public void setData(List<LocalVideoBean> localVideoBean) {
-
+        MyLog.d("size :" +localVideoBean.size());
+        this.mLocalVideoBeans.addAll(localVideoBean);
+        mLocalVideoAdapter.notifyDataSetChanged();
     }
 
 

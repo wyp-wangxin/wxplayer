@@ -7,6 +7,12 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.wyp.android.wxvideoplayer.log.MyLog;
+import com.wyp.wxplayer.bean.LocalVideoBean;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2021/2/9.
  */
@@ -14,14 +20,22 @@ import android.util.Log;
 public class LocalPresenter implements LocalMvp.Presenter {
 
     private LocalMvp.View mView;
-    public LocalPresenter(LocalMvp.View view1) {
+    private Context mContext;
+    private List<LocalVideoBean> mLocalVideoBeans;
+    public LocalPresenter( Context context, LocalMvp.View view1) {
         mView = view1;
+        mContext=context;
+        mLocalVideoBeans = new ArrayList<>();
     }
 
     @Override
     public void loadData() {
 
-
+        getSpecificTypeOfFile(mContext, new String[]{".doc",".apk"});
+        if(mLocalVideoBeans==null){
+            MyLog.d("wwxx mLocalVideoBeans==null");
+        }
+        mView.setData(mLocalVideoBeans);
     }
 
 
@@ -52,12 +66,18 @@ public class LocalPresenter implements LocalMvp.Presenter {
         if(cursor==null)
             return;
         //游标从最后开始往前递减，以此实现时间递减顺序（最近访问的文件，优先显示）
+        mLocalVideoBeans.clear();
         if(cursor.moveToLast())
         {
             do{
                 //输出文件的完整路径
-                String data=cursor.getString(0);
-                Log.d("tag", data);
+                LocalVideoBean localVideoBean = new LocalVideoBean();
+                localVideoBean.setName(cursor.getString(1));
+                localVideoBean.setPath(cursor.getString(0));
+                mLocalVideoBeans.add(localVideoBean);
+                //String data=cursor.getString(0);
+
+                Log.d("tag", " getString(0):"+cursor.getString(0)+" getString(1): "+cursor.getString(1));
             }while(cursor.moveToPrevious());
         }
         cursor.close();
