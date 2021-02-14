@@ -1,12 +1,14 @@
 package com.wyp.wxplayer.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wyp.wxplayer.R;
 import com.wyp.wxplayer.Util;
@@ -50,7 +52,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
      */
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // 获取到当前条目的数据 我们没有真正的资源
-        //VideoBean videoBean = mVideoBeans.get(position);
+        VideoBean videoBean = mVideoBeans.get(position);
 
         // 填充内容 我们没有真正的资源
         //holder.mTvTitle.setText(videoBean.getTitle());
@@ -60,7 +62,48 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         // 加载图片 我们没有真正的资源
         //Glide.with(holder.itemView.getContext()).load(videoBean.getPosterPic()).into(holder.mIvContentimg);
 
+        final int tag;
+        String type = videoBean.getType();
+        if ("ACTIVITY".equalsIgnoreCase(type)) {//打开页面
+            tag = 0;
+            holder.mIvType.setImageResource(R.drawable.home_page_activity);
+        } else if ("VIDEO".equalsIgnoreCase(type)) {//首播，点击进去显示MV描述，相关MV
+            tag = 1;
+            holder.mIvType.setImageResource(R.drawable.home_page_video);
+        } else if ("WEEK_MAIN_STAR".equalsIgnoreCase(type)) {//(悦单)点击进去跟显示悦单详情一样
+            tag = 2;
+            holder.mIvType.setImageResource(R.drawable.home_page_star);
+        } else if ("PLAYLIST".equalsIgnoreCase(type)) {//(悦单)点击进去跟显示悦单详情一样
+            tag = 3;
+            holder.mIvType.setImageResource(R.drawable.home_page_playlist);
+        } else if ("AD".equalsIgnoreCase(type)) {
+            tag = 4;
+            holder.mIvType.setImageResource(R.drawable.home_page_ad);
+        } else if ("PROGRAM".equalsIgnoreCase(type)) {//跳到MV详情
+            tag = 5;
+            holder.mIvType.setImageResource(R.drawable.home_page_program);
+        } else if ("bulletin".equalsIgnoreCase(type)) {
+            tag = 6;
+            holder.mIvType.setImageResource(R.drawable.home_page_bulletin);
+        } else if ("fanart".equalsIgnoreCase(type)) {
+            tag = 7;
+            holder.mIvType.setImageResource(R.drawable.home_page_fanart);
+        } else if ("live".equalsIgnoreCase(type)) {
+            tag = 8;
+            holder.mIvType.setImageResource(R.drawable.home_page_live);
+        } else if ("LIVENEW".equalsIgnoreCase(type) || ("LIVENEWLIST".equals(type))) {
+            tag = 9;
+            holder.mIvType.setImageResource(R.drawable.home_page_live_new);
+        } else if ("INVENTORY".equalsIgnoreCase(videoBean.getType())) {//打开页面
+            tag = 10;
+            holder.mIvType.setImageResource(R.drawable.home_page_project);
+        } else {
+            tag = -100;
+            holder.mIvType.setImageResource(0);
+        }
 
+        // 更新当前条目的类型
+        holder.tag = tag;
     }
 
     @Override
@@ -82,7 +125,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         TextView mTvDescription;
         @Bind(R.id.viewbg)
         View viewbg;
-
+        int tag;// 当前条目的类型
 
         private WxPlayerController mController;
        // public WxVideoPlayer mVideoPlayer;
@@ -113,8 +156,26 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
             @Override
             public void onClick(View view) {
 
+                Toast.makeText(mContext, "嘿嘿嘿 "+getAdapterPosition()+";tag="+tag, Toast.LENGTH_SHORT).show();
+
+                switch (tag){
+                    case 0:
+                    case 4:
+                    case 10:
+                        break;
+                    case 1:
+                    case 5:
+                    case 7:
+
+                        break;
+
+                    case 2:
+                    case 3:
+                        break;
             }
         }
+    }
+
     }
 
 }

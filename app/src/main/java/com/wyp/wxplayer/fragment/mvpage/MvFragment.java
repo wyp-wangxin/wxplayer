@@ -38,7 +38,7 @@ public class MvFragment extends BaseFragment implements MvMvp.View {
     @Override
     protected void initVeiw() {
         presener = new MvPresenter(this);
-        presener.loadData(area, offset, size);
+        //presener.loadData(area, offset, size);
     }
 
     @Override

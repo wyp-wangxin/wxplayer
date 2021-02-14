@@ -20,19 +20,26 @@ public class MvPresenter implements MvMvp.Presener {
     }
 
     @Override
-    public void loadData(String area, int offset, int size) {
-        String url = URLProviderUtil.getMVareaUrl();
+    public void loadData() {
 
-        HttpManager.getInstance().get(url, new BaseCallBack<List<AreaBean>>() {
-            @Override
-            public void onFailure(int code, Exception e) {
-                view.onError(code,e);
-            }
-
-            @Override
-            public void onSuccess(List<AreaBean> areaBeen) {
-                view.setData(areaBeen);
-            }
-        });
     }
+
+
+//    public void loadData(String area, int offset, int size) {
+//        String url = URLProviderUtil.getMVareaUrl();
+//
+//        HttpManager.getInstance().get(url, new BaseCallBack<List<AreaBean>>() {
+//            @Override
+//            public void onFailure(int code, Exception e) {
+//                view.onError(code,e);
+//            }
+//
+//            @Override
+//            public void onSuccess(List<AreaBean> areaBeen) {
+//                view.setData(areaBeen);
+//            }
+//        });
+//    }
+
+
 }
