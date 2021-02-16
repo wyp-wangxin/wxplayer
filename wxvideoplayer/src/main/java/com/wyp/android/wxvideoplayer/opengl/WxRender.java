@@ -51,6 +51,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     private int program_yuv;
     private int avPosition_yuv;
     private int afPosition_yuv;
+    private int u_matrix_yuv;
     private int textureid;
 
     private int sampler_y;
@@ -71,7 +72,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     private int afPosition_mediacodec;
     private int samplerOES_mediacodec;
     private int textureId_mediacodec;
-    private int u_matrix;
+    private int u_matrix_mediacodec;
     float[] matrix = new float[16];
    // private int yuv_wdith =1920;
    // private int yuv_height=1080;
@@ -164,7 +165,6 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         if(onRenderListener != null)
         {
-            //MyLog.d(" onFrameAvailable ");
             onRenderListener.onRender();
         }
     }
@@ -177,7 +177,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
 
         avPosition_yuv = GLES20.glGetAttribLocation(program_yuv, "av_Position");
         afPosition_yuv = GLES20.glGetAttribLocation(program_yuv, "af_Position");
-
+        u_matrix_yuv = GLES20.glGetUniformLocation(program_yuv, "u_Matrix");
         sampler_y = GLES20.glGetUniformLocation(program_yuv, "sampler_y");
         sampler_u = GLES20.glGetUniformLocation(program_yuv, "sampler_u");
         sampler_v = GLES20.glGetUniformLocation(program_yuv, "sampler_v");
@@ -225,7 +225,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         {
             MyLog.d("renderYUV!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             GLES20.glUseProgram(program_yuv);
-
+            GLES20.glUniformMatrix4fv(u_matrix_yuv, 1, false, matrixBuffer);
             GLES20.glEnableVertexAttribArray(avPosition_yuv);
             GLES20.glVertexAttribPointer(avPosition_yuv, 2, GLES20.GL_FLOAT, false, 8, vertexBuffer);
 
@@ -267,7 +267,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         avPosition_mediacodec = GLES20.glGetAttribLocation(program_mediacodec, "av_Position");
         afPosition_mediacodec = GLES20.glGetAttribLocation(program_mediacodec, "af_Position");
         samplerOES_mediacodec = GLES20.glGetUniformLocation(program_mediacodec, "sTexture");
-        u_matrix = GLES20.glGetUniformLocation(program_mediacodec, "u_Matrix");
+        u_matrix_mediacodec = GLES20.glGetUniformLocation(program_mediacodec, "u_Matrix");
 
          textureids = new int[1];
         GLES20.glGenTextures(1, textureids, 0);
@@ -296,24 +296,23 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
         GLES20.glDetachShader(program_mediacodec, avPosition_mediacodec);
         GLES20.glDetachShader(program_mediacodec, afPosition_mediacodec);
         GLES20.glDetachShader(program_mediacodec, samplerOES_mediacodec);
-        GLES20.glDetachShader(program_mediacodec, u_matrix);
+        GLES20.glDetachShader(program_mediacodec, u_matrix_mediacodec);
         GLES20.glDeleteShader(avPosition_mediacodec);
         GLES20.glDeleteShader(afPosition_mediacodec);
         GLES20.glDeleteShader(samplerOES_mediacodec);
         GLES20.glDeleteProgram(program_mediacodec);
-        GLES20.glDeleteProgram(u_matrix);
+        GLES20.glDeleteProgram(u_matrix_mediacodec);
     }
 
     private void renderMediacodec()
     {
-        //MyLog.d("renderMediacodec !!!!!!!!!!!!!!!!!!!!!DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+
         surfaceTexture.updateTexImage();
         GLES20.glUseProgram(program_mediacodec);
 
-
         //MyLog.d(matrixBuffer.toString());
         //MyLog.d(" dd "+matrixBuffer.get(0));
-        GLES20.glUniformMatrix4fv(u_matrix, 1, false, matrixBuffer);
+        GLES20.glUniformMatrix4fv(u_matrix_mediacodec, 1, false, matrixBuffer);
 
         GLES20.glEnableVertexAttribArray(avPosition_mediacodec);
         GLES20.glVertexAttribPointer(avPosition_mediacodec, 2, GLES20.GL_FLOAT, false, 8, vertexBuffer);

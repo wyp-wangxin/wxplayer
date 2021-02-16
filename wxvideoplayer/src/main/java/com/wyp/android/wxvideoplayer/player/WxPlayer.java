@@ -282,7 +282,7 @@ public class WxPlayer {
     {
         MyLog.d("获取到视频的yuv数据");
         if(mWxGLSurfaceView != null)
-        {
+        {   mWxRender.setDataWidthHegit(width,height);
             mWxGLSurfaceView.getWxRender().setRenderType(WxRender.RENDER_YUV);
             mWxGLSurfaceView.setYUVData(width, height, y, u, v);
         }
