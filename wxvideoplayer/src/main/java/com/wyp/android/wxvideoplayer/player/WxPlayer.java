@@ -306,6 +306,7 @@ public class WxPlayer {
         if(surface != null)
         {
             try {
+                MyLog.d("初始化 initMediaCodec");
                 mWxRender.setDataWidthHegit(width,height);
                 mWxGLSurfaceView.getWxRender().setRenderType(WxRender.RENDER_MEDIACODEC);
                 String mime = WxVideoSupportUitl.findVideoCodecName(codecName);
@@ -339,7 +340,7 @@ public class WxPlayer {
     {
         if(surface != null && datasize > 0 && data != null && mediaCodec != null)
         {
-            //MyLog.d("JAVA decodeAVPacket 被调用！");
+            MyLog.d("JAVA decodeAVPacket 被调用！");
             try
             {
                 int intputBufferIndex = mediaCodec.dequeueInputBuffer(10);

@@ -24,7 +24,7 @@ public class WxGLSurfaceView extends GLSurfaceView{
         mWxRender.setOnRenderListener(new WxRender.OnRenderListener() {
             @Override
             public void onRender() {
-                MyLog.d("wwxx onRender setOnRenderListener");
+                //MyLog.d("wwxx onRender setOnRenderListener");
                 requestRender();
             }
         });

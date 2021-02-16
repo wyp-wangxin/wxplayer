@@ -72,92 +72,6 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
     private SurfaceTexture mSurfaceTexture;
     private int mBufferPercentage;
     private WlTimeInfoBean mWlTimeInfoBean;
-   private MediaPlayer.OnPreparedListener mOnPreparedListener
-            = new MediaPlayer.OnPreparedListener() {
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            mp.start();
-            mCurrentState = STATE_PREPARED;
-            mController.setControllerState(mPlayerState, mCurrentState);
-            LogUtil.d("onPrepared ——> STATE_PREPARED");
-        }
-    };
-
-    private MediaPlayer.OnVideoSizeChangedListener mOnVideoSizeChangedListener
-            = new MediaPlayer.OnVideoSizeChangedListener() {
-        @Override
-        public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-            LogUtil.d("onVideoSizeChanged ——> width：" + width + "，height：" + height);
-        }
-    };
-
-    private MediaPlayer.OnCompletionListener mOnCompletionListener
-            = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            mCurrentState = STATE_COMPLETED;
-            mController.setControllerState(mPlayerState, mCurrentState);
-            LogUtil.d("onCompletion ——> STATE_COMPLETED");
-            WxVideoPlayerManager.instance().setCurrentWxVideoPlayer(null);
-        }
-    };
-
-    private MediaPlayer.OnErrorListener mOnErrorListener
-            = new MediaPlayer.OnErrorListener() {
-        @Override
-        public boolean onError(MediaPlayer mp, int what, int extra) {
-            mCurrentState = STATE_ERROR;
-            mController.setControllerState(mPlayerState, mCurrentState);
-            LogUtil.d("onError ——> STATE_ERROR ———— what：" + what);
-            return false;
-        }
-    };
-
-    private MediaPlayer.OnInfoListener mOnInfoListener
-            = new MediaPlayer.OnInfoListener() {
-        @Override
-        public boolean onInfo(MediaPlayer mp, int what, int extra) {
-            if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                // 播放器开始渲染
-                mCurrentState = STATE_PLAYING;
-                mController.setControllerState(mPlayerState, mCurrentState);
-                LogUtil.d("onInfo ——> MEDIA_INFO_VIDEO_RENDERING_START：STATE_PLAYING");
-            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                // MediaPlayer暂时不播放，以缓冲更多的数据
-                if (mCurrentState == STATE_PAUSED || mCurrentState == STATE_BUFFERING_PAUSED) {
-                    mCurrentState = STATE_BUFFERING_PAUSED;
-                    LogUtil.d("onInfo ——> MEDIA_INFO_BUFFERING_START：STATE_BUFFERING_PAUSED");
-                } else {
-                    mCurrentState = STATE_BUFFERING_PLAYING;
-                    LogUtil.d("onInfo ——> MEDIA_INFO_BUFFERING_START：STATE_BUFFERING_PLAYING");
-                }
-                mController.setControllerState(mPlayerState, mCurrentState);
-            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                // 填充缓冲区后，MediaPlayer恢复播放/暂停
-                if (mCurrentState == STATE_BUFFERING_PLAYING) {
-                    mCurrentState = STATE_PLAYING;
-                    mController.setControllerState(mPlayerState, mCurrentState);
-                    LogUtil.d("onInfo ——> MEDIA_INFO_BUFFERING_END： STATE_PLAYING");
-                }
-                if (mCurrentState == STATE_BUFFERING_PAUSED) {
-                    mCurrentState = STATE_PAUSED;
-                    mController.setControllerState(mPlayerState, mCurrentState);
-                    LogUtil.d("onInfo ——> MEDIA_INFO_BUFFERING_END： STATE_PAUSED");
-                }
-            } else {
-                LogUtil.d("onInfo ——> what：" + what);
-            }
-            return true;
-        }
-    };
-
-    private MediaPlayer.OnBufferingUpdateListener mOnBufferingUpdateListener
-            = new MediaPlayer.OnBufferingUpdateListener() {
-        @Override
-        public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            mBufferPercentage = percent;
-        }
-    };
     private WxOnCompleteListener mWxOnCompleteListener =new WxOnCompleteListener() {
         @Override
         public void onComplete() {
@@ -185,6 +99,11 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
             MyLog.d("准备好了，可以开始播放视频了");
             mCurrentState = STATE_PREPARED;
             mController.setControllerState(mPlayerState, mCurrentState);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             mWxPlayer.start();
             mCurrentState = STATE_PLAYING;
             mController.setControllerState(mPlayerState, mCurrentState);
@@ -204,6 +123,8 @@ public class WxVideoPlayer extends FrameLayout implements IWxVideoPlayer{
             mWlTimeInfoBean=timeInfoBean;
         }
     };
+
+
 
     public WxVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);

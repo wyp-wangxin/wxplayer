@@ -306,7 +306,7 @@ public class WxRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameA
 
     private void renderMediacodec()
     {
-        MyLog.d("renderMediacodec !!!!!!!!!!!!!!!!!!!!!DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+        //MyLog.d("renderMediacodec !!!!!!!!!!!!!!!!!!!!!DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         surfaceTexture.updateTexImage();
         GLES20.glUseProgram(program_mediacodec);
 

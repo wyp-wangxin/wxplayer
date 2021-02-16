@@ -2,6 +2,7 @@ package com.wyp.wxplayer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.text.TextUtils;
@@ -96,5 +97,15 @@ public class Util {
     public static int getScreenHeight(Context context) {
         int height = ((Activity) context).getWindowManager().getDefaultDisplay().getHeight();
         return height;
+    }
+
+    public static Activity getActivityByContext(Context context){
+        while(context instanceof ContextWrapper){
+            if(context instanceof Activity){
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 }

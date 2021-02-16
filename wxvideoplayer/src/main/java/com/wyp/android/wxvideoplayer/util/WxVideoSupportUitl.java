@@ -12,6 +12,11 @@ public class WxVideoSupportUitl {
     private static Map<String, String> codecMap = new HashMap<>();
     static {
         codecMap.put("h264", "video/avc");
+        codecMap.put("h265", "video/hevc");
+        codecMap.put("mpeg4", "video/mp4v-es");
+        //codecMap.put("h264", "video/3gpp");
+       // codecMap.put("h264", "video/x-vnd.on2.vp8");
+       // codecMap.put("h264", "video/x-vnd.on2.vp9");
     }
 
     public static String findVideoCodecName(String ffcodename)

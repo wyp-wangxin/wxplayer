@@ -1,13 +1,19 @@
 package com.wyp.wxplayer.fragment.localpage;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.wyp.android.wxvideoplayer.log.MyLog;
+import com.wyp.wxplayer.Util;
 import com.wyp.wxplayer.bean.LocalVideoBean;
 
 import java.util.ArrayList;
@@ -31,7 +37,17 @@ public class LocalPresenter implements LocalMvp.Presenter {
     @Override
     public void loadData() {
 
-        getSpecificTypeOfFile(mContext, new String[]{".doc",".apk"});
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        { MyLog.d("requestPermissions 2");
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED//读取存储卡权限
+                    || ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(Util.getActivityByContext(mContext), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x1001);
+                MyLog.d("requestPermissions 1");
+            }
+        }
+
+        getSpecificTypeOfFile(mContext, new String[]{".mp4",".wmv"});
         if(mLocalVideoBeans==null){
             MyLog.d("wwxx mLocalVideoBeans==null");
         }
